@@ -1,412 +1,415 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milhão do Palmyrão</title>
+    <!-- Tailwind CSS via CDN para os estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Pequenos ajustes para animações suaves */
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms; }
+    </style>
+</head>
+<body class="min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900 via-indigo-950 to-black text-white overflow-x-hidden">
 
-/**
- * ==========================================
- * INSTRUÇÕES PARA PUBLICAR NO GITHUB PAGES
- * ==========================================
- * 1. Cria um projeto React usando Vite: `npm create vite@latest milhao-palmyrao -- --template react`
- * 2. Entra na pasta: `cd milhao-palmyrao` e instala as dependências: `npm install`
- * 3. Instala o Tailwind CSS seguindo a documentação oficial do Vite + Tailwind.
- * 4. Substitui o conteúdo do ficheiro `src/App.jsx` por todo este código.
- * 5. (Opcional) Instala o `gh-pages` para publicar: `npm install gh-pages --save-dev`
- * 6. Adiciona `"homepage": "https://<TEU-USUARIO>.github.io/<NOME-DO-REPO>"` no package.json
- * 7. Executa `npm run build` e envia para o teu repositório!
- * * NOTA: Todos os ícones foram convertidos para SVG nativo para não precisares de instalar o `lucide-react`.
- */
-
-// --- ÍCONES SVG NATIVOS (Sem dependências externas) ---
-const IconTrophy = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/></svg>;
-const IconPlay = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"/></svg>;
-const IconBrain = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>;
-const IconGlobe = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>;
-const IconFlaskConical = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><line x1="5.5" x2="18.5" y1="16" y2="16"/></svg>;
-const IconBookOpen = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
-const IconHand = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>;
-const IconXCircle = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>;
-
-// --- BANCO DE QUESTÕES ---
-const questionBank = [
-  // ================= NÍVEL FÁCIL =================
-  { id: 1, level: 'facil', subject: 'portugues', text: 'SARESP (D3) - Leia: "Quando viu o tamanho da prova, o aluno ficou de cabelo em pé." A expressão "de cabelo em pé" significa que ele ficou:', options: ['Penteado', 'Assustado/Preocupado', 'Alegre', 'Com frio'], correct: 1 },
-  { id: 2, level: 'facil', subject: 'portugues', text: 'SARESP (D1) - "João guardou o seu diário na gaveta de meias para a irmã não ler." Onde João guardou o diário?', options: ['Na mochila', 'Debaixo da cama', 'Na gaveta de meias', 'No armário da irmã'], correct: 2 },
-  { id: 3, level: 'facil', subject: 'historia', text: 'Quem foi o primeiro imperador do Brasil após a Independência em 1822?', options: ['D. João VI', 'D. Pedro II', 'Tiradentes', 'D. Pedro I'], correct: 3 },
-  { id: 4, level: 'facil', subject: 'geografia', text: 'Qual é o nome do nosso planeta e qual a sua forma aproximada?', options: ['Marte - Quadrada', 'Terra - Plana', 'Terra - Esférica', 'Vénus - Esférica'], correct: 2 },
-  { id: 5, level: 'facil', subject: 'ciencias', text: 'Qual órgão do corpo humano é o principal responsável por bombear o sangue?', options: ['Pulmão', 'Cérebro', 'Estômago', 'Coração'], correct: 3 },
-  { id: 6, level: 'facil', subject: 'portugues', text: 'SARESP (D9) - O objetivo principal de um texto de "Receita Culinária" é:', options: ['Contar uma história engraçada', 'Ensinar a preparar um alimento', 'Noticiar um facto do dia a dia', 'Fazer uma propaganda'], correct: 1 },
-  { id: 7, level: 'facil', subject: 'historia', text: 'A data de 22 de abril de 1500 marca qual evento importante na História do Brasil?', options: ['Fim da escravatura', 'Proclamação da República', 'Chegada dos portugueses', 'Independência do Brasil'], correct: 2 },
-  { id: 8, level: 'facil', subject: 'geografia', text: 'Qual é o maior país da América do Sul em extensão territorial?', options: ['Argentina', 'Brasil', 'Colômbia', 'Chile'], correct: 1 },
-  { id: 9, level: 'facil', subject: 'ciencias', text: 'A água é essencial para a vida. Qual é a sua fórmula química?', options: ['CO2', 'NaCl', 'O2', 'H2O'], correct: 3 },
-  { id: 10, level: 'facil', subject: 'portugues', text: 'SARESP (D12) - "O leão, rei da selva, dormia profundamente." O termo "rei da selva" refere-se a quem?', options: ['Ao sono', 'À selva', 'Ao leão', 'A um caçador'], correct: 2 },
-  { id: 11, level: 'facil', subject: 'historia', text: 'Os povos indígenas já habitavam o Brasil antes de 1500. Como eram chamadas as suas habitações?', options: ['Castelos', 'Ocas', 'Iglus', 'Prédios'], correct: 1 },
-  { id: 12, level: 'facil', subject: 'geografia', text: 'Qual das opções abaixo é considerada uma zona rural?', options: ['Centro da cidade', 'Bairro com muitos prédios', 'Fazenda com plantações', 'Centro Comercial'], correct: 2 },
-  { id: 13, level: 'facil', subject: 'ciencias', text: 'Qual astro é responsável por iluminar e aquecer a Terra durante o dia?', options: ['A Lua', 'Marte', 'O Sol', 'Júpiter'], correct: 2 },
-  { id: 14, level: 'facil', subject: 'portugues', text: 'SARESP (D4) - "A Maria abriu o guarda-chuva antes de sair de casa." O que podemos deduzir (inferir)?', options: ['Fazia muito sol.', 'Estava a chover ou ia chover.', 'Ela ia para a praia.', 'Ela estava atrasada.'], correct: 1 },
-  { id: 15, level: 'facil', subject: 'historia', text: 'Quem assinou a Lei Áurea em 1888, abolindo a escravatura no Brasil?', options: ['Princesa Isabel', 'Zumbi dos Palmares', 'D. Pedro I', 'Duque de Caxias'], correct: 0 },
-  { id: 16, level: 'facil', subject: 'geografia', text: 'O Brasil é dividido em quantas regiões pelo IBGE?', options: ['Três', 'Cinco', 'Sete', 'Nove'], correct: 1 },
-  { id: 17, level: 'facil', subject: 'ciencias', text: 'Animais que se alimentam exclusivamente de plantas são chamados de:', options: ['Carnívoros', 'Herbívoros', 'Omnívoros', 'Detritívoros'], correct: 1 },
-  { id: 18, level: 'facil', subject: 'portugues', text: 'SARESP (D2) - O antónimo (palavra de sentido contrário) de "Barulho" é:', options: ['Silêncio', 'Ruído', 'Confusão', 'Grito'], correct: 0 },
-  { id: 19, level: 'facil', subject: 'historia', text: 'Qual foi a primeira capital do Brasil?', options: ['Rio de Janeiro', 'Brasília', 'São Paulo', 'Salvador'], correct: 3 },
-  { id: 20, level: 'facil', subject: 'geografia', text: 'A Amazónia está localizada predominantemente em qual região brasileira?', options: ['Sul', 'Nordeste', 'Centro-Oeste', 'Norte'], correct: 3 },
-  { id: 21, level: 'facil', subject: 'ciencias', text: 'Qual é o sentido usado para ouvir o som dos pássaros?', options: ['Visão', 'Olfato', 'Tato', 'Audição'], correct: 3 },
-  { id: 22, level: 'facil', subject: 'portugues', text: 'SARESP (D6) - Uma fábula como "A Lebre e a Tartaruga" costuma ter como tema central:', options: ['Uma notícia urgente', 'Uma receita médica', 'Uma lição de moral', 'As regras de um jogo'], correct: 2 },
-  { id: 23, level: 'facil', subject: 'historia', text: 'O feriado de 7 de setembro comemora o quê no Brasil?', options: ['O descobrimento', 'A Independência', 'A Proclamação da República', 'O Dia do Índio'], correct: 1 },
-  { id: 24, level: 'facil', subject: 'geografia', text: 'Qual oceano banha o litoral do Brasil?', options: ['Oceano Pacífico', 'Oceano Índico', 'Oceano Ártico', 'Oceano Atlântico'], correct: 3 },
-  { id: 25, level: 'facil', subject: 'ciencias', text: 'Que parte da planta geralmente fixa a árvore no solo?', options: ['As folhas', 'As raízes', 'Os frutos', 'As flores'], correct: 1 },
-
-  // ================= NÍVEL MÉDIO =================
-  { id: 26, level: 'medio', subject: 'portugues', text: 'SARESP (D11) - Assinale a alternativa que expressa uma OPINIÃO e não um facto:', options: ['O Brasil fica na América do Sul.', 'Choveu em São Paulo ontem.', 'A Matemática é a melhor disciplina de todas.', 'A água entra em ebulição a 100°C.'], correct: 2 },
-  { id: 27, level: 'medio', subject: 'historia', text: 'Qual ciclo económico foi responsável pelo grande desenvolvimento e urbanização da região Sudeste no século XIX e início do XX?', options: ['Ciclo do Ouro', 'Ciclo da Borracha', 'Ciclo do Café', 'Ciclo do Pau-Brasil'], correct: 2 },
-  { id: 28, level: 'medio', subject: 'geografia', text: 'A Caatinga é um bioma exclusivamente brasileiro. Em qual região ela predomina?', options: ['Sul', 'Sudeste', 'Nordeste', 'Norte'], correct: 2 },
-  { id: 29, level: 'medio', subject: 'ciencias', text: 'Como se chama o processo pelo qual as plantas produzem o seu próprio alimento utilizando a luz solar?', options: ['Respiração', 'Transpiração', 'Polinização', 'Fotossíntese'], correct: 3 },
-  { id: 30, level: 'medio', subject: 'portugues', text: 'SARESP (D14) - Na frase: "Ele disse que viria... mas não tenho a certeza", as reticências (...) indicam:', options: ['Certeza absoluta', 'Uma hesitação ou dúvida', 'Uma pergunta', 'Um susto forte'], correct: 1 },
-  { id: 31, level: 'medio', subject: 'historia', text: 'Quem liderou o movimento da Inconfidência Mineira contra a Coroa Portuguesa?', options: ['D. Pedro I', 'Zumbi dos Palmares', 'Joaquim José da Silva Xavier (Tiradentes)', 'Duque de Caxias'], correct: 2 },
-  { id: 32, level: 'medio', subject: 'geografia', text: 'O que é o êxodo rural?', options: ['A migração de pessoas do campo para a cidade.', 'O plantio em larga escala.', 'A viagem de férias para quintas.', 'O aumento da população nas cidades devido a nascimentos.'], correct: 0 },
-  { id: 33, level: 'medio', subject: 'ciencias', text: 'Os seres humanos possuem quantos cromossomas nas suas células somáticas normais?', options: ['23', '46', '48', '50'], correct: 1 },
-  { id: 34, level: 'medio', subject: 'portugues', text: 'SARESP (D6) - Se um texto fala sobre o aquecimento global, derretimento de glaciares e aumento do nível do mar, qual é o seu tema?', options: ['Desportos de inverno', 'Turismo na Antártida', 'Alterações climáticas', 'A vida dos pinguins'], correct: 2 },
-  { id: 35, level: 'medio', subject: 'historia', text: 'O período em que o Brasil foi governado por militares, com início em 1964, é chamado de:', options: ['Estado Novo', 'República da Espada', 'Ditadura Militar', 'Era Vargas'], correct: 2 },
-  { id: 36, level: 'medio', subject: 'geografia', text: 'Qual o nome do bloco económico formado pelo Brasil, Argentina, Paraguai e Uruguai?', options: ['União Europeia', 'NAFTA', 'Mercosul', 'BRICS'], correct: 2 },
-  { id: 37, level: 'medio', subject: 'ciencias', text: 'A passagem do estado sólido direto para o estado gasoso, sem passar pelo líquido, chama-se:', options: ['Evaporação', 'Condensação', 'Fusão', 'Sublimação'], correct: 3 },
-  { id: 38, level: 'medio', subject: 'portugues', text: 'SARESP (D13) - O humor de uma tirinha muitas vezes é provocado por uma quebra de expectativa. Isso significa que:', options: ['O final é sempre triste.', 'Acontece algo surpreendente que o leitor não esperava.', 'O texto usa palavras muito difíceis.', 'Os personagens não falam.'], correct: 1 },
-  { id: 39, level: 'medio', subject: 'historia', text: 'Em que ano ocorreu a Proclamação da República do Brasil?', options: ['1822', '1888', '1889', '1930'], correct: 2 },
-  { id: 40, level: 'medio', subject: 'geografia', text: 'Qual linha imaginária corta o Brasil na região Norte?', options: ['Trópico de Capricórnio', 'Trópico de Câncer', 'Meridiano de Greenwich', 'Linha do Equador'], correct: 3 },
-  { id: 41, level: 'medio', subject: 'ciencias', text: 'Qual cientista formulou a Teoria da Evolução por Seleção Natural?', options: ['Albert Einstein', 'Isaac Newton', 'Charles Darwin', 'Galileu Galilei'], correct: 2 },
-  { id: 42, level: 'medio', subject: 'portugues', text: 'SARESP (D15) - Em "Estudou muito, PORTANTO passou no exame", a palavra em destaque indica uma:', options: ['Condição', 'Conclusão', 'Oposição', 'Causa'], correct: 1 },
-  { id: 43, level: 'medio', subject: 'historia', text: 'Getúlio Vargas governou o Brasil por muitos anos. Como ficou conhecido o seu período ditatorial de 1937 a 1945?', options: ['República Velha', 'Estado Novo', 'Anos de Chumbo', 'Nova República'], correct: 1 },
-  { id: 44, level: 'medio', subject: 'geografia', text: 'Qual país sul-americano faz fronteira com o Brasil, mas NÃO tem saída para o mar?', options: ['Colômbia', 'Uruguai', 'Bolívia', 'Peru'], correct: 2 },
-  { id: 45, level: 'medio', subject: 'ciencias', text: 'Qual vitamina é ativada no corpo humano pela exposição saudável ao Sol?', options: ['Vitamina A', 'Vitamina C', 'Vitamina D', 'Vitamina B12'], correct: 2 },
-  { id: 46, level: 'medio', subject: 'portugues', text: 'SARESP (D10) - O uso de um argumento de autoridade num texto serve para:', options: ['Deixar o texto mais engraçado', 'Confundir o leitor', 'Dar credibilidade e sustentar uma tese', 'Reduzir o tamanho do texto'], correct: 2 },
-  { id: 47, level: 'medio', subject: 'historia', text: 'A Guerra de Canudos (1896-1897) ocorreu em qual estado brasileiro?', options: ['São Paulo', 'Bahia', 'Pernambuco', 'Rio de Janeiro'], correct: 1 },
-  { id: 48, level: 'medio', subject: 'geografia', text: 'Qual é o clima predominante na maior parte do território brasileiro?', options: ['Tropical', 'Temperado', 'Desértico', 'Equatorial'], correct: 0 },
-  { id: 49, level: 'medio', subject: 'ciencias', text: 'Os dinossauros foram extintos em qual era geológica?', options: ['Paleozoica', 'Cenozoica', 'Mesozoica', 'Pré-Câmbrica'], correct: 2 },
-  { id: 50, level: 'medio', subject: 'portugues', text: 'SARESP (D2) - Qual das palavras abaixo é proparoxítona?', options: ['Café', 'Caderno', 'Matemática', 'Computador'], correct: 2 },
-
-  // ================= NÍVEL DIFÍCIL =================
-  { id: 51, level: 'dificil', subject: 'portugues', text: 'SARESP (D16) - "Que excelente ideia a tua de sair à chuva sem guarda-chuva e ficar constipado!" Esta frase é um claro exemplo de:', options: ['Metáfora', 'Ironia', 'Eufemismo', 'Pleonasmo'], correct: 1 },
-  { id: 52, level: 'dificil', subject: 'historia', text: 'O que estipulava o Tratado de Tordesilhas (1494)?', options: ['A paz entre Portugal e Inglaterra.', 'A divisão do Novo Mundo entre Portugal e Espanha.', 'A abolição do tráfico negreiro.', 'A abertura dos portos brasileiros.'], correct: 1 },
-  { id: 53, level: 'dificil', subject: 'geografia', text: 'O Aquífero Guarani, um dos maiores reservatórios subterrâneos do mundo, NÃO abrange terras de qual destes países?', options: ['Brasil', 'Argentina', 'Chile', 'Uruguai'], correct: 2 },
-  { id: 54, level: 'dificil', subject: 'ciencias', text: 'Qual organelo celular é responsável pela produção de energia (respiração celular)?', options: ['Ribossoma', 'Mitocôndria', 'Lisossoma', 'Complexo de Golgi'], correct: 1 },
-  { id: 55, level: 'dificil', subject: 'portugues', text: 'SARESP (D18) - O uso do pronome "Tu" conjugado como "Tu vai" (em vez de "Tu vais") é classificado em linguagem como uma:', options: ['Variação linguística informal/coloquial', 'Regra da norma-padrão', 'Erro proposital literário', 'Linguagem técnica'], correct: 0 },
-  { id: 56, level: 'dificil', subject: 'historia', text: 'A Revolta da Vacina, no Rio de Janeiro (1904), teve como um dos seus estopins as campanhas de qual médico sanitarista?', options: ['Carlos Chagas', 'Oswaldo Cruz', 'Vital Brazil', 'Adolfo Lutz'], correct: 1 },
-  { id: 57, level: 'dificil', subject: 'geografia', text: 'Qual fenómeno natural é caracterizado pelo aquecimento anormal das águas do Oceano Pacífico Equatorial?', options: ['La Niña', 'Tsunami', 'El Niño', 'Ciclone Extratropical'], correct: 2 },
-  { id: 58, level: 'dificil', subject: 'ciencias', text: 'Qual é o elemento químico mais abundante no universo?', options: ['Oxigénio', 'Carbono', 'Hidrogénio', 'Ferro'], correct: 2 },
-  { id: 59, level: 'dificil', subject: 'portugues', text: 'SARESP (D19) - Num artigo de opinião, a "Tese" pode ser definida como:', options: ['O resumo do texto.', 'A ideia central ou posicionamento defendido pelo autor.', 'Os dados estatísticos apresentados.', 'A assinatura do autor.'], correct: 1 },
-  { id: 60, level: 'dificil', subject: 'historia', text: 'Qual movimento popular exigia eleições diretas para a presidência do Brasil em 1984?', options: ['Caras Pintadas', 'Revolução de 32', 'Diretas Já', 'Tenentismo'], correct: 2 },
-  { id: 61, level: 'dificil', subject: 'geografia', text: 'A vegetação de transição entre a Amazónia e a Caatinga, rica em palmeiras como o babaçu, é a:', options: ['Mata Atlântica', 'Mata dos Cocais', 'Pantanal', 'Pampas'], correct: 1 },
-  { id: 62, level: 'dificil', subject: 'ciencias', text: 'Qual é a velocidade aproximada da luz no vácuo?', options: ['300.000 km/s', '340 m/s', '1.000.000 km/h', '150.000 km/s'], correct: 0 },
-  { id: 63, level: 'dificil', subject: 'portugues', text: 'SARESP (D15) - Em "Embora estivesse doente, foi trabalhar", a conjunção "Embora" introduz uma:', options: ['Consequência', 'Concessão (oposição que não impede a ação)', 'Finalidade', 'Proporção'], correct: 1 },
-  { id: 64, level: 'dificil', subject: 'historia', text: 'O que determinava a Lei de Terras de 1850 no Brasil?', options: ['A distribuição de terras a imigrantes.', 'A compra de terras como única forma legal de aquisição, elitizando o acesso.', 'A reforma agrária nacional.', 'A devolução de terras aos indígenas.'], correct: 1 },
-  { id: 65, level: 'dificil', subject: 'geografia', text: 'A desagregação de rochas por agentes como o vento, a água e a variação de temperatura é chamada de:', options: ['Erosão', 'Assoreamento', 'Intemperismo', 'Lixiviação'], correct: 2 },
-  { id: 66, level: 'dificil', subject: 'ciencias', text: 'Em Genética, quando um indivíduo possui dois alelos idênticos para uma característica (ex: AA ou aa), ele é chamado de:', options: ['Heterozigótico', 'Dominante puro', 'Recessivo mutante', 'Homozigótico'], correct: 3 },
-  { id: 67, level: 'dificil', subject: 'portugues', text: 'SARESP (D7) - O que diferencia uma Crónica de uma Notícia?', options: ['A crónica não tem personagens.', 'A notícia é sempre sobre o passado, a crónica sobre o futuro.', 'A notícia relata factos objetivos; a crónica faz uma reflexão literária sobre o quotidiano.', 'A notícia usa linguagem informal.'], correct: 2 },
-  { id: 68, level: 'dificil', subject: 'historia', text: 'A vinda da Família Real Portuguesa ao Brasil em 1808 ocorreu, principalmente, para fugir de qual líder europeu?', options: ['Luís XIV', 'Napoleão Bonaparte', 'Oliver Cromwell', 'Czar Nicolau II'], correct: 1 },
-  { id: 69, level: 'dificil', subject: 'geografia', text: 'A união física de duas ou mais cidades em crescimento, formando uma única malha urbana contínua, chama-se:', options: ['Metropolização', 'Conurbação', 'Favelização', 'Gentrificação'], correct: 1 },
-  { id: 70, level: 'dificil', subject: 'ciencias', text: 'Quem é considerado o "Pai da Genética" pelas suas experiências com ervilhas?', options: ['Charles Darwin', 'Gregor Mendel', 'Louis Pasteur', 'Alexander Fleming'], correct: 1 },
-  { id: 71, level: 'dificil', subject: 'portugues', text: 'SARESP (D12) - Na frase: "Os alunos saíram. Eles estavam felizes." O pronome "Eles" atua como elemento de:', options: ['Ambiguidade', 'Coesão referencial (evita repetição)', 'Erro gramatical', 'Dêixis temporal'], correct: 1 },
-  { id: 72, level: 'dificil', subject: 'historia', text: 'A Guerra do Paraguai (1864-1870) envolveu a Tríplice Aliança formada por:', options: ['Brasil, Argentina e Uruguai', 'Brasil, Chile e Bolívia', 'Paraguai, Argentina e Chile', 'Bolívia, Peru e Brasil'], correct: 0 },
-  { id: 73, level: 'dificil', subject: 'geografia', text: 'Qual país possui a maior população absoluta do mundo atualmente (dados de 2023/2024)?', options: ['China', 'Índia', 'Estados Unidos', 'Rússia'], correct: 1 },
-  { id: 74, level: 'dificil', subject: 'ciencias', text: 'Qual é o nome da ligação química em que ocorre a partilha de eletrões entre átomos?', options: ['Ligação Iónica', 'Ligação Metálica', 'Ligação Covalente', 'Força de Van der Waals'], correct: 2 },
-  { id: 75, level: 'dificil', subject: 'portugues', text: 'SARESP (D21) - O uso de gírias e expressões regionais num texto narrativo tem a principal função de:', options: ['Dificultar a leitura', 'Caracterizar socialmente e regionalmente os personagens', 'Mostrar que o autor não sabe escrever', 'Transformar o texto em poesia'], correct: 1 }
-];
-
-// Valores da premiação (20 níveis)
-const prizeLadder = [
-  1000, 2000, 3000, 5000, 10000, 
-  20000, 30000, 50000, 75000, 100000, 
-  150000, 200000, 300000, 400000, 500000, 
-  600000, 700000, 800000, 900000, 1000000
-];
-
-// Função utilitária para embaralhar arrays
-const shuffleArray = (array) => {
-  let newArr = [...array];
-  for (let i = newArr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-  }
-  return newArr;
-};
-
-export default function App() {
-  const [gameState, setGameState] = useState('start'); // start, playing, won, lost, stopped
-  const [gameQuestions, setGameQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [shuffledOptions, setShuffledOptions] = useState([]);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [isRevealing, setIsRevealing] = useState(false);
-  const [earnedMoney, setEarnedMoney] = useState(0);
-
-  // Inicializar Partida com Proporção Exata (50% Português, 50% Outras)
-  const startGame = () => {
-    // Função para extrair questões de um nível específico, com quotas por matéria
-    const getQuestionsByLevel = (level, portCount, otherCount) => {
-      // 1. Separa as questões do nível específico entre Português e Outras
-      const portQs = shuffleArray(questionBank.filter(q => q.level === level && q.subject === 'portugues'));
-      const otherQs = shuffleArray(questionBank.filter(q => q.level === level && q.subject !== 'portugues'));
-
-      // 2. Seleciona a quantidade exata de cada grupo
-      const selectedForLevel = [
-        ...portQs.slice(0, portCount),
-        ...otherQs.slice(0, otherCount)
-      ];
-
-      // 3. Embaralha o bloco para que as matérias se misturem dentro da dificuldade
-      return shuffleArray(selectedForLevel);
-    };
-
-    // Fáceis: 7 questões (4 Português + 3 Outras)
-    const faceis = getQuestionsByLevel('facil', 4, 3);
-    
-    // Médias: 7 questões (3 Português + 4 Outras)
-    const medias = getQuestionsByLevel('medio', 3, 4);
-    
-    // Difíceis: 6 questões (3 Português + 3 Outras)
-    const dificeis = getQuestionsByLevel('dificil', 3, 3);
-
-    // Une as 20 questões na ordem crescente de dificuldade (fácil -> médio -> difícil)
-    // No total teremos 10 de Português e 10 de outras matérias.
-    const selected = [...faceis, ...medias, ...dificeis];
-
-    setGameQuestions(selected);
-    setCurrentIndex(0);
-    setEarnedMoney(0);
-    setGameState('playing');
-  };
-
-  // Toda vez que a pergunta mudar (currentIndex), embaralha as alternativas dela
-  useEffect(() => {
-    if (gameQuestions.length > 0 && gameState === 'playing') {
-      const currentQ = gameQuestions[currentIndex];
-      
-      // Mapeia as opções originais adicionando a propriedade isCorrect
-      const optionsWithStatus = currentQ.options.map((opt, idx) => ({
-        text: opt,
-        isCorrect: idx === currentQ.correct
-      }));
-
-      // Embaralha as opções desta pergunta
-      setShuffledOptions(shuffleArray(optionsWithStatus));
-      setSelectedAnswer(null);
-      setIsRevealing(false);
-    }
-  }, [currentIndex, gameQuestions, gameState]);
-
-  const handleAnswer = (index) => {
-    if (isRevealing) return;
-
-    setSelectedAnswer(index);
-    setIsRevealing(true);
-
-    const isCorrect = shuffledOptions[index].isCorrect;
-
-    setTimeout(() => {
-      if (isCorrect) {
-        if (currentIndex === 19) {
-          // Ganhou 1 Milhão!
-          setEarnedMoney(prizeLadder[19]);
-          setGameState('won');
-        } else {
-          // Próxima Pergunta
-          setEarnedMoney(prizeLadder[currentIndex]);
-          setCurrentIndex(prev => prev + 1);
-        }
-      } else {
-        // Errou - Perde metade do que já tinha garantido
-        const prevPrize = currentIndex === 0 ? 0 : prizeLadder[currentIndex - 1];
-        setEarnedMoney(prevPrize / 2);
-        setGameState('lost');
-      }
-    }, 2500); // 2.5s de suspense (Tensão do jogo)
-  };
-
-  const handleStop = () => {
-    const prevPrize = currentIndex === 0 ? 0 : prizeLadder[currentIndex - 1];
-    setEarnedMoney(prevPrize);
-    setGameState('stopped');
-  };
-
-  // Formatador de Moeda
-  const formatMoney = (val) => {
-    return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
-  };
-
-  // Ícones dinâmicos por matéria (usando componentes SVG locais)
-  const getSubjectIcon = (subject) => {
-    switch(subject) {
-      case 'portugues': return <IconBookOpen className="text-yellow-300 w-8 h-8" />;
-      case 'historia': return <IconGlobe className="text-orange-300 w-8 h-8" />;
-      case 'geografia': return <IconGlobe className="text-green-300 w-8 h-8" />;
-      case 'ciencias': return <IconFlaskConical className="text-blue-300 w-8 h-8" />;
-      default: return <IconBrain className="text-white w-8 h-8" />;
-    }
-  };
-
-  // --- TELA INICIAL ---
-  if (gameState === 'start') {
-    return (
-      <div className="min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900 via-indigo-950 to-black flex flex-col items-center justify-center p-4 text-white font-sans">
-        <div className="bg-white/5 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(30,58,138,0.5)] text-center max-w-3xl w-full">
-          <div className="flex justify-center mb-6">
-            <IconTrophy className="w-28 h-28 text-yellow-400 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-bounce" />
-          </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 mb-6 drop-shadow-lg tracking-tight">
-            Milhão do Palmyrão
-          </h1>
-          <p className="text-xl text-blue-100 mb-10 font-light max-w-2xl mx-auto">
-            Teste os seus conhecimentos em 20 níveis de dificuldade crescente! 
-            Domine os Descritores de Português e explore o mundo das Ciências e Humanidades.
-          </p>
-          
-          <button 
-            onClick={startGame}
-            className="group relative px-10 py-5 bg-gradient-to-b from-yellow-300 to-yellow-600 hover:from-yellow-200 hover:to-yellow-500 text-blue-950 font-black text-2xl uppercase tracking-widest rounded-full shadow-[0_0_30px_rgba(250,204,21,0.5)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center mx-auto"
-          >
-            <IconPlay className="mr-3 w-8 h-8" />
-            Iniciar Partida
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // --- TELAS DE FIM DE JOGO (Ganhou/Perdeu/Parou) ---
-  if (gameState === 'won' || gameState === 'lost' || gameState === 'stopped') {
-    return (
-      <div className="min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900 via-indigo-950 to-black flex flex-col items-center justify-center p-4 text-white font-sans">
-        <div className="bg-white/10 backdrop-blur-xl p-10 rounded-3xl border border-white/20 shadow-2xl text-center max-w-xl w-full">
-          {gameState === 'won' && <IconTrophy className="w-24 h-24 text-yellow-400 mx-auto mb-4 animate-bounce drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]" />}
-          {gameState === 'stopped' && <IconHand className="w-24 h-24 text-blue-400 mx-auto mb-4" />}
-          {gameState === 'lost' && <IconXCircle className="w-24 h-24 text-red-500 mx-auto mb-4" />}
-          
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-            {gameState === 'won' ? 'FICASTE MILIONÁRIO!' : gameState === 'stopped' ? 'ATITUDE SÁBIA!' : 'QUE PENA, ERRASTE!'}
-          </h1>
-          
-          <p className="text-xl text-blue-200 mb-6 font-light">O teu prémio final foi de:</p>
-          <div className="text-6xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 mb-10 drop-shadow-md">
-            {formatMoney(earnedMoney)}
-          </div>
-
-          <button 
-            onClick={startGame}
-            className="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-xl rounded-full shadow-lg transition-all transform hover:scale-105 backdrop-blur-sm"
-          >
-            Jogar Novamente
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // --- TELA PRINCIPAL DO JOGO ---
-  const currentQ = gameQuestions[currentIndex];
-  const currentPrize = prizeLadder[currentIndex];
-  const stopPrize = currentIndex === 0 ? 0 : prizeLadder[currentIndex - 1];
-  const errPrize = stopPrize / 2;
-
-  return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900 via-indigo-950 to-black text-white font-sans flex flex-col md:flex-row">
-      
-      {/* Sidebar: Status e Prémios */}
-      <div className="w-full md:w-1/4 bg-black/40 p-6 flex flex-col md:border-r border-white/10 shadow-xl z-10">
-        <div className="flex flex-row md:flex-col justify-between md:justify-start items-center md:items-start mb-8">
-          <div>
-            <div className="text-yellow-400 font-bold text-2xl flex items-center gap-3">
-              <IconTrophy size={24}/> Questão {currentIndex + 1}/20
+    <!-- ==================== TELA INICIAL ==================== -->
+    <div id="screen-start" class="min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="bg-white/5 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(30,58,138,0.5)] text-center max-w-3xl w-full">
+            <div class="flex justify-center mb-6">
+                <!-- Ícone Trophy -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="112" height="112" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-bounce"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/></svg>
             </div>
-            <div className="text-blue-300 text-sm mt-2 uppercase tracking-widest font-semibold bg-blue-900/50 inline-block px-3 py-1 rounded-full border border-blue-500/30">
-              Nível {currentQ.level === 'facil' ? 'Fácil' : currentQ.level === 'medio' ? 'Médio' : 'Difícil'}
+            <h1 class="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 mb-6 drop-shadow-lg tracking-tight">
+                Milhão do Palmyrão
+            </h1>
+            <p class="text-xl text-blue-100 mb-10 font-light max-w-2xl mx-auto">
+                Teste os seus conhecimentos em 20 níveis de dificuldade crescente! 
+                Domine os Descritores de Português e explore o mundo das Ciências e Humanidades.
+            </p>
+            <button onclick="startGame()" class="group relative px-10 py-5 bg-gradient-to-b from-yellow-300 to-yellow-600 hover:from-yellow-200 hover:to-yellow-500 text-blue-950 font-black text-2xl uppercase tracking-widest rounded-full shadow-[0_0_30px_rgba(250,204,21,0.5)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center mx-auto cursor-pointer">
+                <!-- Ícone Play -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Iniciar Partida
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== TELA DO JOGO ==================== -->
+    <div id="screen-playing" class="min-h-screen hidden flex-col md:flex-row">
+        <!-- Sidebar: Status e Prémios -->
+        <div class="w-full md:w-1/4 bg-black/40 p-6 flex flex-col md:border-r border-white/10 shadow-xl z-10">
+            <div class="flex flex-row md:flex-col justify-between md:justify-start items-center md:items-start mb-8">
+                <div>
+                    <div class="text-yellow-400 font-bold text-2xl flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/></svg>
+                        Questão <span id="ui-q-number">1</span>/20
+                    </div>
+                    <div id="ui-q-level" class="text-blue-300 text-sm mt-2 uppercase tracking-widest font-semibold bg-blue-900/50 inline-block px-3 py-1 rounded-full border border-blue-500/30">
+                        Nível Fácil
+                    </div>
+                </div>
+                <div class="text-right md:text-left md:mt-6">
+                    <span class="text-gray-400 text-xs uppercase tracking-wider block mb-1">Garantido</span>
+                    <span id="ui-prize-guaranteed-top" class="text-2xl font-bold text-white">R$ 0</span>
+                </div>
             </div>
-          </div>
-          
-          <div className="text-right md:text-left md:mt-6">
-            <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Garantido</span>
-            <span className="text-2xl font-bold text-white">{formatMoney(stopPrize)}</span>
-          </div>
-        </div>
 
-        {/* Quadro de Valores da Pergunta Atual */}
-        <div className="grid grid-cols-3 md:grid-cols-1 gap-3 text-center md:text-left mt-auto mb-6">
-          <div className="bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/40 rounded-xl p-3 md:p-5 shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]">
-            <div className="text-green-300 text-xs md:text-sm uppercase font-bold tracking-wider mb-1">Acertar</div>
-            <div className="text-green-400 font-bold text-lg md:text-2xl">{formatMoney(currentPrize)}</div>
-          </div>
-          <div className="bg-gradient-to-r from-yellow-600/20 to-yellow-900/20 border border-yellow-500/40 rounded-xl p-3 md:p-5">
-            <div className="text-yellow-300 text-xs md:text-sm uppercase font-bold tracking-wider mb-1">Parar</div>
-            <div className="text-yellow-400 font-bold text-lg md:text-2xl">{formatMoney(stopPrize)}</div>
-          </div>
-          <div className="bg-gradient-to-r from-red-600/20 to-red-900/20 border border-red-500/40 rounded-xl p-3 md:p-5">
-            <div className="text-red-300 text-xs md:text-sm uppercase font-bold tracking-wider mb-1">Errar</div>
-            <div className="text-red-400 font-bold text-lg md:text-2xl">{formatMoney(errPrize)}</div>
-          </div>
-        </div>
-        
-        <button 
-          onClick={handleStop}
-          disabled={isRevealing}
-          className="w-full py-4 bg-red-600/80 hover:bg-red-500 border border-red-400 text-white font-bold tracking-wider uppercase rounded-xl transition-all disabled:opacity-50 hover:shadow-[0_0_15px_rgba(239,68,68,0.5)]"
-        >
-          Parar e Levar {formatMoney(stopPrize)}
-        </button>
-      </div>
-
-      {/* Área Central: Pergunta e Respostas */}
-      <div className="flex-1 p-4 md:p-10 flex flex-col justify-center max-w-5xl mx-auto w-full relative">
-        
-        {/* Painel da Pergunta */}
-        <div className="bg-blue-950/50 backdrop-blur-md p-6 md:p-12 rounded-[2rem] border border-blue-400/30 shadow-[0_0_40px_rgba(30,58,138,0.3)] mb-8 relative">
-          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 p-3 rounded-full border-4 border-[#0b1120] shadow-lg">
-            {getSubjectIcon(currentQ.subject)}
-          </div>
-          <h2 className="text-2xl md:text-4xl font-medium text-center leading-snug mt-4 text-blue-50">
-            {currentQ.text}
-          </h2>
-        </div>
-
-        {/* Alternativas Embaralhadas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          {shuffledOptions.map((opt, idx) => {
+            <!-- Quadro de Valores -->
+            <div class="grid grid-cols-3 md:grid-cols-1 gap-3 text-center md:text-left mt-auto mb-6">
+                <div class="bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/40 rounded-xl p-3 md:p-5 shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]">
+                    <div class="text-green-300 text-xs md:text-sm uppercase font-bold tracking-wider mb-1">Acertar</div>
+                    <div id="ui-prize-correct" class="text-green-400 font-bold text-lg md:text-2xl">R$ 1.000</div>
+                </div>
+                <div class="bg-gradient-to-r from-yellow-600/20 to-yellow-900/20 border border-yellow-500/40 rounded-xl p-3 md:p-5">
+                    <div class="text-yellow-300 text-xs md:text-sm uppercase font-bold tracking-wider mb-1">Parar</div>
+                    <div id="ui-prize-stop" class="text-yellow-400 font-bold text-lg md:text-2xl">R$ 0</div>
+                </div>
+                <div class="bg-gradient-to-r from-red-600/20 to-red-900/20 border border-red-500/40 rounded-xl p-3 md:p-5">
+                    <div class="text-red-300 text-xs md:text-sm uppercase font-bold tracking-wider mb-1">Errar</div>
+                    <div id="ui-prize-wrong" class="text-red-400 font-bold text-lg md:text-2xl">R$ 0</div>
+                </div>
+            </div>
             
-            // Lógica visual das cores dos botões dependendo da interação
-            let btnClass = "bg-blue-900/40 border-blue-500/30 hover:bg-blue-800/60 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] text-blue-100";
-            let letterBg = "bg-blue-500/20 text-blue-300";
+            <button id="btn-stop" onclick="handleStop()" class="w-full py-4 bg-red-600/80 hover:bg-red-500 border border-red-400 text-white font-bold tracking-wider uppercase rounded-xl transition-all hover:shadow-[0_0_15px_rgba(239,68,68,0.5)] cursor-pointer">
+                Parar e Levar <span id="ui-btn-stop-val">R$ 0</span>
+            </button>
+        </div>
+
+        <!-- Área Central -->
+        <div class="flex-1 p-4 md:p-10 flex flex-col justify-center max-w-5xl mx-auto w-full relative">
+            <div class="bg-blue-950/50 backdrop-blur-md p-6 md:p-12 rounded-[2rem] border border-blue-400/30 shadow-[0_0_40px_rgba(30,58,138,0.3)] mb-8 relative">
+                <div id="ui-subject-icon" class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 p-3 rounded-full border-4 border-[#0b1120] shadow-lg">
+                    <!-- Icon injectado por JS -->
+                </div>
+                <h2 id="ui-question-text" class="text-2xl md:text-4xl font-medium text-center leading-snug mt-4 text-blue-50">
+                    A carregar questão...
+                </h2>
+            </div>
+
+            <!-- Alternativas (Injectadas via JS) -->
+            <div id="ui-options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TELA DE FIM ==================== -->
+    <div id="screen-end" class="min-h-screen hidden flex-col items-center justify-center p-4">
+        <div class="bg-white/10 backdrop-blur-xl p-10 rounded-3xl border border-white/20 shadow-2xl text-center max-w-xl w-full">
+            <div id="ui-end-icon" class="flex justify-center mb-4"></div>
             
-            if (isRevealing) {
-              if (opt.isCorrect) {
-                // A resposta correta fica sempre verde
-                btnClass = "bg-green-600 border-green-400 shadow-[0_0_30px_rgba(34,197,94,0.6)] text-white z-10 scale-105";
-                letterBg = "bg-white/20 text-white";
-              } else if (idx === selectedAnswer) {
-                // Se ele clicou numa errada, ela fica vermelha
-                btnClass = "bg-red-600 border-red-400 text-white opacity-80";
-                letterBg = "bg-white/20 text-white";
-              } else {
-                // As outras erradas não clicadas ficam cinzentas
-                btnClass = "bg-gray-900/50 border-gray-700 opacity-40 text-gray-400";
-                letterBg = "bg-gray-700 text-gray-500";
-              }
-            } else if (selectedAnswer === idx) {
-               // Quando acabou de clicar, fica amarelo em estado de espera/suspense
-               btnClass = "bg-yellow-500 border-yellow-300 text-blue-950 shadow-[0_0_20px_rgba(250,204,21,0.5)]";
-               letterBg = "bg-black/10 text-blue-900";
+            <h1 id="ui-end-title" class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+                RESULTADO
+            </h1>
+            
+            <p class="text-xl text-blue-200 mb-6 font-light">O teu prémio final foi de:</p>
+            <div id="ui-end-prize" class="text-6xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 mb-10 drop-shadow-md">
+                R$ 0
+            </div>
+
+            <button onclick="showScreen('start')" class="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-xl rounded-full shadow-lg transition-all transform hover:scale-105 backdrop-blur-sm cursor-pointer">
+                Voltar ao Início
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== SCRIPT DO JOGO ==================== -->
+    <script>
+        // Ícones em SVG
+        const icons = {
+            trophy: '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mx-auto animate-bounce drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/></svg>',
+            hand: '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400 mx-auto"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
+            xcircle: '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500 mx-auto"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+            portugues: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-300"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+            historia: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-orange-300"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>',
+            geografia: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-300"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>',
+            ciencias: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-300"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><line x1="5.5" x2="18.5" y1="16" y2="16"/></svg>',
+            default: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>'
+        };
+
+        const questionBank = [
+            // FÁCIL
+            { id: 1, level: 'facil', subject: 'portugues', text: 'SARESP (D3) - Leia: "Quando viu o tamanho da prova, o aluno ficou de cabelo em pé." A expressão "de cabelo em pé" significa que ele ficou:', options: ['Penteado', 'Assustado/Preocupado', 'Alegre', 'Com frio'], correct: 1 },
+            { id: 2, level: 'facil', subject: 'portugues', text: 'SARESP (D1) - "João guardou o seu diário na gaveta de meias para a irmã não ler." Onde João guardou o diário?', options: ['Na mochila', 'Debaixo da cama', 'Na gaveta de meias', 'No armário da irmã'], correct: 2 },
+            { id: 3, level: 'facil', subject: 'historia', text: 'Quem foi o primeiro imperador do Brasil após a Independência em 1822?', options: ['D. João VI', 'D. Pedro II', 'Tiradentes', 'D. Pedro I'], correct: 3 },
+            { id: 4, level: 'facil', subject: 'geografia', text: 'Qual é o nome do nosso planeta e qual a sua forma aproximada?', options: ['Marte - Quadrada', 'Terra - Plana', 'Terra - Esférica', 'Vénus - Esférica'], correct: 2 },
+            { id: 5, level: 'facil', subject: 'ciencias', text: 'Qual órgão do corpo humano é o principal responsável por bombear o sangue?', options: ['Pulmão', 'Cérebro', 'Estômago', 'Coração'], correct: 3 },
+            { id: 6, level: 'facil', subject: 'portugues', text: 'SARESP (D9) - O objetivo principal de um texto de "Receita Culinária" é:', options: ['Contar uma história engraçada', 'Ensinar a preparar um alimento', 'Noticiar um facto do dia a dia', 'Fazer uma propaganda'], correct: 1 },
+            { id: 7, level: 'facil', subject: 'historia', text: 'A data de 22 de abril de 1500 marca qual evento importante na História do Brasil?', options: ['Fim da escravatura', 'Proclamação da República', 'Chegada dos portugueses', 'Independência do Brasil'], correct: 2 },
+            { id: 8, level: 'facil', subject: 'geografia', text: 'Qual é o maior país da América do Sul em extensão territorial?', options: ['Argentina', 'Brasil', 'Colômbia', 'Chile'], correct: 1 },
+            { id: 9, level: 'facil', subject: 'ciencias', text: 'A água é essencial para a vida. Qual é a sua fórmula química?', options: ['CO2', 'NaCl', 'O2', 'H2O'], correct: 3 },
+            { id: 10, level: 'facil', subject: 'portugues', text: 'SARESP (D12) - "O leão, rei da selva, dormia profundamente." O termo "rei da selva" refere-se a quem?', options: ['Ao sono', 'À selva', 'Ao leão', 'A um caçador'], correct: 2 },
+            { id: 11, level: 'facil', subject: 'historia', text: 'Os povos indígenas já habitavam o Brasil antes de 1500. Como eram chamadas as suas habitações?', options: ['Castelos', 'Ocas', 'Iglus', 'Prédios'], correct: 1 },
+            { id: 12, level: 'facil', subject: 'geografia', text: 'Qual das opções abaixo é considerada uma zona rural?', options: ['Centro da cidade', 'Bairro com muitos prédios', 'Fazenda com plantações', 'Centro Comercial'], correct: 2 },
+            { id: 13, level: 'facil', subject: 'ciencias', text: 'Qual astro é responsável por iluminar e aquecer a Terra durante o dia?', options: ['A Lua', 'Marte', 'O Sol', 'Júpiter'], correct: 2 },
+            { id: 14, level: 'facil', subject: 'portugues', text: 'SARESP (D4) - "A Maria abriu o guarda-chuva antes de sair de casa." O que podemos deduzir (inferir)?', options: ['Fazia muito sol.', 'Estava a chover ou ia chover.', 'Ela ia para a praia.', 'Ela estava atrasada.'], correct: 1 },
+            { id: 15, level: 'facil', subject: 'historia', text: 'Quem assinou a Lei Áurea em 1888, abolindo a escravatura no Brasil?', options: ['Princesa Isabel', 'Zumbi dos Palmares', 'D. Pedro I', 'Duque de Caxias'], correct: 0 },
+            { id: 16, level: 'facil', subject: 'geografia', text: 'O Brasil é dividido em quantas regiões pelo IBGE?', options: ['Três', 'Cinco', 'Sete', 'Nove'], correct: 1 },
+            { id: 17, level: 'facil', subject: 'ciencias', text: 'Animais que se alimentam exclusivamente de plantas são chamados de:', options: ['Carnívoros', 'Herbívoros', 'Omnívoros', 'Detritívoros'], correct: 1 },
+            { id: 18, level: 'facil', subject: 'portugues', text: 'SARESP (D2) - O antónimo (palavra de sentido contrário) de "Barulho" é:', options: ['Silêncio', 'Ruído', 'Confusão', 'Grito'], correct: 0 },
+            { id: 19, level: 'facil', subject: 'historia', text: 'Qual foi a primeira capital do Brasil?', options: ['Rio de Janeiro', 'Brasília', 'São Paulo', 'Salvador'], correct: 3 },
+            { id: 20, level: 'facil', subject: 'geografia', text: 'A Amazónia está localizada predominantemente em qual região brasileira?', options: ['Sul', 'Nordeste', 'Centro-Oeste', 'Norte'], correct: 3 },
+            { id: 21, level: 'facil', subject: 'ciencias', text: 'Qual é o sentido usado para ouvir o som dos pássaros?', options: ['Visão', 'Olfato', 'Tato', 'Audição'], correct: 3 },
+            { id: 22, level: 'facil', subject: 'portugues', text: 'SARESP (D6) - Uma fábula como "A Lebre e a Tartaruga" costuma ter como tema central:', options: ['Uma notícia urgente', 'Uma receita médica', 'Uma lição de moral', 'As regras de um jogo'], correct: 2 },
+            { id: 23, level: 'facil', subject: 'historia', text: 'O feriado de 7 de setembro comemora o quê no Brasil?', options: ['O descobrimento', 'A Independência', 'A Proclamação da República', 'O Dia do Índio'], correct: 1 },
+            { id: 24, level: 'facil', subject: 'geografia', text: 'Qual oceano banha o litoral do Brasil?', options: ['Oceano Pacífico', 'Oceano Índico', 'Oceano Ártico', 'Oceano Atlântico'], correct: 3 },
+            { id: 25, level: 'facil', subject: 'ciencias', text: 'Que parte da planta geralmente fixa a árvore no solo?', options: ['As folhas', 'As raízes', 'Os frutos', 'As flores'], correct: 1 },
+
+            // MÉDIO
+            { id: 26, level: 'medio', subject: 'portugues', text: 'SARESP (D11) - Assinale a alternativa que expressa uma OPINIÃO e não um facto:', options: ['O Brasil fica na América do Sul.', 'Choveu em São Paulo ontem.', 'A Matemática é a melhor disciplina de todas.', 'A água entra em ebulição a 100°C.'], correct: 2 },
+            { id: 27, level: 'medio', subject: 'historia', text: 'Qual ciclo económico foi responsável pelo grande desenvolvimento e urbanização da região Sudeste no século XIX e início do XX?', options: ['Ciclo do Ouro', 'Ciclo da Borracha', 'Ciclo do Café', 'Ciclo do Pau-Brasil'], correct: 2 },
+            { id: 28, level: 'medio', subject: 'geografia', text: 'A Caatinga é um bioma exclusivamente brasileiro. Em qual região ela predomina?', options: ['Sul', 'Sudeste', 'Nordeste', 'Norte'], correct: 2 },
+            { id: 29, level: 'medio', subject: 'ciencias', text: 'Como se chama o processo pelo qual as plantas produzem o seu próprio alimento utilizando a luz solar?', options: ['Respiração', 'Transpiração', 'Polinização', 'Fotossíntese'], correct: 3 },
+            { id: 30, level: 'medio', subject: 'portugues', text: 'SARESP (D14) - Na frase: "Ele disse que viria... mas não tenho a certeza", as reticências (...) indicam:', options: ['Certeza absoluta', 'Uma hesitação ou dúvida', 'Uma pergunta', 'Um susto forte'], correct: 1 },
+            { id: 31, level: 'medio', subject: 'historia', text: 'Quem liderou o movimento da Inconfidência Mineira contra a Coroa Portuguesa?', options: ['D. Pedro I', 'Zumbi dos Palmares', 'Joaquim José da Silva Xavier (Tiradentes)', 'Duque de Caxias'], correct: 2 },
+            { id: 32, level: 'medio', subject: 'geografia', text: 'O que é o êxodo rural?', options: ['A migração de pessoas do campo para a cidade.', 'O plantio em larga escala.', 'A viagem de férias para quintas.', 'O aumento da população nas cidades devido a nascimentos.'], correct: 0 },
+            { id: 33, level: 'medio', subject: 'ciencias', text: 'Os seres humanos possuem quantos cromossomas nas suas células somáticas normais?', options: ['23', '46', '48', '50'], correct: 1 },
+            { id: 34, level: 'medio', subject: 'portugues', text: 'SARESP (D6) - Se um texto fala sobre o aquecimento global, derretimento de glaciares e aumento do nível do mar, qual é o seu tema?', options: ['Desportos de inverno', 'Turismo na Antártida', 'Alterações climáticas', 'A vida dos pinguins'], correct: 2 },
+            { id: 35, level: 'medio', subject: 'historia', text: 'O período em que o Brasil foi governado por militares, com início em 1964, é chamado de:', options: ['Estado Novo', 'República da Espada', 'Ditadura Militar', 'Era Vargas'], correct: 2 },
+            { id: 36, level: 'medio', subject: 'geografia', text: 'Qual o nome do bloco económico formado pelo Brasil, Argentina, Paraguai e Uruguai?', options: ['União Europeia', 'NAFTA', 'Mercosul', 'BRICS'], correct: 2 },
+            { id: 37, level: 'medio', subject: 'ciencias', text: 'A passagem do estado sólido direto para o estado gasoso, sem passar pelo líquido, chama-se:', options: ['Evaporação', 'Condensação', 'Fusão', 'Sublimação'], correct: 3 },
+            { id: 38, level: 'medio', subject: 'portugues', text: 'SARESP (D13) - O humor de uma tirinha muitas vezes é provocado por uma quebra de expectativa. Isso significa que:', options: ['O final é sempre triste.', 'Acontece algo surpreendente que o leitor não esperava.', 'O texto usa palavras muito difíceis.', 'Os personagens não falam.'], correct: 1 },
+            { id: 39, level: 'medio', subject: 'historia', text: 'Em que ano ocorreu a Proclamação da República do Brasil?', options: ['1822', '1888', '1889', '1930'], correct: 2 },
+            { id: 40, level: 'medio', subject: 'geografia', text: 'Qual linha imaginária corta o Brasil na região Norte?', options: ['Trópico de Capricórnio', 'Trópico de Câncer', 'Meridiano de Greenwich', 'Linha do Equador'], correct: 3 },
+            { id: 41, level: 'medio', subject: 'ciencias', text: 'Qual cientista formulou a Teoria da Evolução por Seleção Natural?', options: ['Albert Einstein', 'Isaac Newton', 'Charles Darwin', 'Galileu Galilei'], correct: 2 },
+            { id: 42, level: 'medio', subject: 'portugues', text: 'SARESP (D15) - Em "Estudou muito, PORTANTO passou no exame", a palavra em destaque indica uma:', options: ['Condição', 'Conclusão', 'Oposição', 'Causa'], correct: 1 },
+            { id: 43, level: 'medio', subject: 'historia', text: 'Getúlio Vargas governou o Brasil por muitos anos. Como ficou conhecido o seu período ditatorial de 1937 a 1945?', options: ['República Velha', 'Estado Novo', 'Anos de Chumbo', 'Nova República'], correct: 1 },
+            { id: 44, level: 'medio', subject: 'geografia', text: 'Qual país sul-americano faz fronteira com o Brasil, mas NÃO tem saída para o mar?', options: ['Colômbia', 'Uruguai', 'Bolívia', 'Peru'], correct: 2 },
+            { id: 45, level: 'medio', subject: 'ciencias', text: 'Qual vitamina é ativada no corpo humano pela exposição saudável ao Sol?', options: ['Vitamina A', 'Vitamina C', 'Vitamina D', 'Vitamina B12'], correct: 2 },
+            { id: 46, level: 'medio', subject: 'portugues', text: 'SARESP (D10) - O uso de um argumento de autoridade num texto serve para:', options: ['Deixar o texto mais engraçado', 'Confundir o leitor', 'Dar credibilidade e sustentar uma tese', 'Reduzir o tamanho do texto'], correct: 2 },
+            { id: 47, level: 'medio', subject: 'historia', text: 'A Guerra de Canudos (1896-1897) ocorreu em qual estado brasileiro?', options: ['São Paulo', 'Bahia', 'Pernambuco', 'Rio de Janeiro'], correct: 1 },
+            { id: 48, level: 'medio', subject: 'geografia', text: 'Qual é o clima predominante na maior parte do território brasileiro?', options: ['Tropical', 'Temperado', 'Desértico', 'Equatorial'], correct: 0 },
+            { id: 49, level: 'medio', subject: 'ciencias', text: 'Os dinossauros foram extintos em qual era geológica?', options: ['Paleozoica', 'Cenozoica', 'Mesozoica', 'Pré-Câmbrica'], correct: 2 },
+            { id: 50, level: 'medio', subject: 'portugues', text: 'SARESP (D2) - Qual das palavras abaixo é proparoxítona?', options: ['Café', 'Caderno', 'Matemática', 'Computador'], correct: 2 },
+
+            // DIFÍCIL
+            { id: 51, level: 'dificil', subject: 'portugues', text: 'SARESP (D16) - "Que excelente ideia a tua de sair à chuva sem guarda-chuva e ficar constipado!" Esta frase é um claro exemplo de:', options: ['Metáfora', 'Ironia', 'Eufemismo', 'Pleonasmo'], correct: 1 },
+            { id: 52, level: 'dificil', subject: 'historia', text: 'O que estipulava o Tratado de Tordesilhas (1494)?', options: ['A paz entre Portugal e Inglaterra.', 'A divisão do Novo Mundo entre Portugal e Espanha.', 'A abolição do tráfico negreiro.', 'A abertura dos portos brasileiros.'], correct: 1 },
+            { id: 53, level: 'dificil', subject: 'geografia', text: 'O Aquífero Guarani, um dos maiores reservatórios subterrâneos do mundo, NÃO abrange terras de qual destes países?', options: ['Brasil', 'Argentina', 'Chile', 'Uruguai'], correct: 2 },
+            { id: 54, level: 'dificil', subject: 'ciencias', text: 'Qual organelo celular é responsável pela produção de energia (respiração celular)?', options: ['Ribossoma', 'Mitocôndria', 'Lisossoma', 'Complexo de Golgi'], correct: 1 },
+            { id: 55, level: 'dificil', subject: 'portugues', text: 'SARESP (D18) - O uso do pronome "Tu" conjugado como "Tu vai" (em vez de "Tu vais") é classificado em linguagem como uma:', options: ['Variação linguística informal/coloquial', 'Regra da norma-padrão', 'Erro proposital literário', 'Linguagem técnica'], correct: 0 },
+            { id: 56, level: 'dificil', subject: 'historia', text: 'A Revolta da Vacina, no Rio de Janeiro (1904), teve como um dos seus estopins as campanhas de qual médico sanitarista?', options: ['Carlos Chagas', 'Oswaldo Cruz', 'Vital Brazil', 'Adolfo Lutz'], correct: 1 },
+            { id: 57, level: 'dificil', subject: 'geografia', text: 'Qual fenómeno natural é caracterizado pelo aquecimento anormal das águas do Oceano Pacífico Equatorial?', options: ['La Niña', 'Tsunami', 'El Niño', 'Ciclone Extratropical'], correct: 2 },
+            { id: 58, level: 'dificil', subject: 'ciencias', text: 'Qual é o elemento químico mais abundante no universo?', options: ['Oxigénio', 'Carbono', 'Hidrogénio', 'Ferro'], correct: 2 },
+            { id: 59, level: 'dificil', subject: 'portugues', text: 'SARESP (D19) - Num artigo de opinião, a "Tese" pode ser definida como:', options: ['O resumo do texto.', 'A ideia central ou posicionamento defendido pelo autor.', 'Os dados estatísticos apresentados.', 'A assinatura do autor.'], correct: 1 },
+            { id: 60, level: 'dificil', subject: 'historia', text: 'Qual movimento popular exigia eleições diretas para a presidência do Brasil em 1984?', options: ['Caras Pintadas', 'Revolução de 32', 'Diretas Já', 'Tenentismo'], correct: 2 },
+            { id: 61, level: 'dificil', subject: 'geografia', text: 'A vegetação de transição entre a Amazónia e a Caatinga, rica em palmeiras como o babaçu, é a:', options: ['Mata Atlântica', 'Mata dos Cocais', 'Pantanal', 'Pampas'], correct: 1 },
+            { id: 62, level: 'dificil', subject: 'ciencias', text: 'Qual é a velocidade aproximada da luz no vácuo?', options: ['300.000 km/s', '340 m/s', '1.000.000 km/h', '150.000 km/s'], correct: 0 },
+            { id: 63, level: 'dificil', subject: 'portugues', text: 'SARESP (D15) - Em "Embora estivesse doente, foi trabalhar", a conjunção "Embora" introduz uma:', options: ['Consequência', 'Concessão (oposição que não impede a ação)', 'Finalidade', 'Proporção'], correct: 1 },
+            { id: 64, level: 'dificil', subject: 'historia', text: 'O que determinava a Lei de Terras de 1850 no Brasil?', options: ['A distribuição de terras a imigrantes.', 'A compra de terras como única forma legal de aquisição, elitizando o acesso.', 'A reforma agrária nacional.', 'A devolução de terras aos indígenas.'], correct: 1 },
+            { id: 65, level: 'dificil', subject: 'geografia', text: 'A desagregação de rochas por agentes como o vento, a água e a variação de temperatura é chamada de:', options: ['Erosão', 'Assoreamento', 'Intemperismo', 'Lixiviação'], correct: 2 },
+            { id: 66, level: 'dificil', subject: 'ciencias', text: 'Em Genética, quando um indivíduo possui dois alelos idênticos para uma característica (ex: AA ou aa), ele é chamado de:', options: ['Heterozigótico', 'Dominante puro', 'Recessivo mutante', 'Homozigótico'], correct: 3 },
+            { id: 67, level: 'dificil', subject: 'portugues', text: 'SARESP (D7) - O que diferencia uma Crónica de uma Notícia?', options: ['A crónica não tem personagens.', 'A notícia é sempre sobre o passado, a crónica sobre o futuro.', 'A notícia relata factos objetivos; a crónica faz uma reflexão literária sobre o quotidiano.', 'A notícia usa linguagem informal.'], correct: 2 },
+            { id: 68, level: 'dificil', subject: 'historia', text: 'A vinda da Família Real Portuguesa ao Brasil em 1808 ocorreu, principalmente, para fugir de qual líder europeu?', options: ['Luís XIV', 'Napoleão Bonaparte', 'Oliver Cromwell', 'Czar Nicolau II'], correct: 1 },
+            { id: 69, level: 'dificil', subject: 'geografia', text: 'A união física de duas ou mais cidades em crescimento, formando uma única malha urbana contínua, chama-se:', options: ['Metropolização', 'Conurbação', 'Favelização', 'Gentrificação'], correct: 1 },
+            { id: 70, level: 'dificil', subject: 'ciencias', text: 'Quem é considerado o "Pai da Genética" pelas suas experiências com ervilhas?', options: ['Charles Darwin', 'Gregor Mendel', 'Louis Pasteur', 'Alexander Fleming'], correct: 1 },
+            { id: 71, level: 'dificil', subject: 'portugues', text: 'SARESP (D12) - Na frase: "Os alunos saíram. Eles estavam felizes." O pronome "Eles" atua como elemento de:', options: ['Ambiguidade', 'Coesão referencial (evita repetição)', 'Erro gramatical', 'Dêixis temporal'], correct: 1 },
+            { id: 72, level: 'dificil', subject: 'historia', text: 'A Guerra do Paraguai (1864-1870) envolveu a Tríplice Aliança formada por:', options: ['Brasil, Argentina e Uruguai', 'Brasil, Chile e Bolívia', 'Paraguai, Argentina e Chile', 'Bolívia, Peru e Brasil'], correct: 0 },
+            { id: 73, level: 'dificil', subject: 'geografia', text: 'Qual país possui a maior população absoluta do mundo atualmente (dados de 2023/2024)?', options: ['China', 'Índia', 'Estados Unidos', 'Rússia'], correct: 1 },
+            { id: 74, level: 'dificil', subject: 'ciencias', text: 'Qual é o nome da ligação química em que ocorre a partilha de eletrões entre átomos?', options: ['Ligação Iónica', 'Ligação Metálica', 'Ligação Covalente', 'Força de Van der Waals'], correct: 2 },
+            { id: 75, level: 'dificil', subject: 'portugues', text: 'SARESP (D21) - O uso de gírias e expressões regionais num texto narrativo tem a principal função de:', options: ['Dificultar a leitura', 'Caracterizar socialmente e regionalmente os personagens', 'Mostrar que o autor não sabe escrever', 'Transformar o texto em poesia'], correct: 1 }
+        ];
+
+        const prizeLadder = [
+            1000, 2000, 3000, 5000, 10000, 
+            20000, 30000, 50000, 75000, 100000, 
+            150000, 200000, 300000, 400000, 500000, 
+            600000, 700000, 800000, 900000, 1000000
+        ];
+
+        // Estado Global
+        let gameQuestions = [];
+        let currentIndex = 0;
+        let shuffledOptions = [];
+        let isRevealing = false;
+        let earnedMoney = 0;
+
+        // Funções utilitárias
+        const shuffleArray = (array) => {
+            let newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        };
+
+        const formatMoney = (val) => {
+            return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
+        };
+
+        const showScreen = (screenId) => {
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-start').classList.remove('flex');
+            
+            document.getElementById('screen-playing').classList.add('hidden');
+            document.getElementById('screen-playing').classList.remove('flex');
+            
+            document.getElementById('screen-end').classList.add('hidden');
+            document.getElementById('screen-end').classList.remove('flex');
+
+            const screen = document.getElementById(`screen-${screenId}`);
+            screen.classList.remove('hidden');
+            screen.classList.add('flex');
+        };
+
+        // Iniciar Jogo
+        const startGame = () => {
+            const getQuestionsByLevel = (level, portCount, otherCount) => {
+                const portQs = shuffleArray(questionBank.filter(q => q.level === level && q.subject === 'portugues'));
+                const otherQs = shuffleArray(questionBank.filter(q => q.level === level && q.subject !== 'portugues'));
+                return shuffleArray([...portQs.slice(0, portCount), ...otherQs.slice(0, otherCount)]);
+            };
+
+            const faceis = getQuestionsByLevel('facil', 4, 3);
+            const medias = getQuestionsByLevel('medio', 3, 4);
+            const dificeis = getQuestionsByLevel('dificil', 3, 3);
+
+            gameQuestions = [...faceis, ...medias, ...dificeis];
+            currentIndex = 0;
+            earnedMoney = 0;
+            
+            renderQuestion();
+            showScreen('playing');
+        };
+
+        // Renderizar Pergunta
+        const renderQuestion = () => {
+            isRevealing = false;
+            const currentQ = gameQuestions[currentIndex];
+            const currentPrize = prizeLadder[currentIndex];
+            const stopPrize = currentIndex === 0 ? 0 : prizeLadder[currentIndex - 1];
+            const errPrize = stopPrize / 2;
+
+            // Atualiza UI de Valores
+            document.getElementById('ui-q-number').innerText = currentIndex + 1;
+            document.getElementById('ui-q-level').innerText = `Nível ${currentQ.level === 'facil' ? 'Fácil' : currentQ.level === 'medio' ? 'Médio' : 'Difícil'}`;
+            document.getElementById('ui-prize-guaranteed-top').innerText = formatMoney(stopPrize);
+            document.getElementById('ui-prize-correct').innerText = formatMoney(currentPrize);
+            document.getElementById('ui-prize-stop').innerText = formatMoney(stopPrize);
+            document.getElementById('ui-prize-wrong').innerText = formatMoney(errPrize);
+            document.getElementById('ui-btn-stop-val').innerText = formatMoney(stopPrize);
+
+            // Atualiza Questão
+            document.getElementById('ui-question-text').innerText = currentQ.text;
+            document.getElementById('ui-subject-icon').innerHTML = icons[currentQ.subject] || icons.default;
+
+            // Opções
+            const optionsWithStatus = currentQ.options.map((opt, idx) => ({ text: opt, isCorrect: idx === currentQ.correct }));
+            shuffledOptions = shuffleArray(optionsWithStatus);
+
+            const optionsContainer = document.getElementById('ui-options-container');
+            optionsContainer.innerHTML = ''; // Limpa antigas
+            
+            const letters = ['A', 'B', 'C', 'D'];
+
+            shuffledOptions.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                // Classes base (estado normal)
+                btn.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center hover:-translate-y-1 bg-blue-900/40 border-blue-500/30 hover:bg-blue-800/60 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] text-blue-100";
+                btn.innerHTML = `
+                    <span class="w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-blue-500/20 text-blue-300 option-letter">
+                        ${letters[idx]}
+                    </span>
+                    <span class="leading-tight">${opt.text}</span>
+                `;
+                btn.onclick = () => handleAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('btn-stop').disabled = false;
+        };
+
+        // Processar Resposta
+        const handleAnswer = (index, btnElement) => {
+            if (isRevealing) return;
+            isRevealing = true;
+            document.getElementById('btn-stop').disabled = true;
+
+            const isCorrect = shuffledOptions[index].isCorrect;
+            const allBtns = document.querySelectorAll('.option-btn');
+
+            // Primeiro: Colocar a escolhida a amarelo (suspense)
+            btnElement.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center bg-yellow-500 border-yellow-300 text-blue-950 shadow-[0_0_20px_rgba(250,204,21,0.5)]";
+            btnElement.querySelector('.option-letter').className = "w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-black/10 text-blue-900 option-letter";
+
+            // Remove o hover das outras
+            allBtns.forEach(b => { 
+                b.classList.remove('hover:-translate-y-1'); 
+                b.disabled = true; 
+            });
+
+            // Aguarda 1.5s de suspense e revela
+            setTimeout(() => {
+                allBtns.forEach((b, i) => {
+                    if (shuffledOptions[i].isCorrect) {
+                        // Correta fica verde
+                        b.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center bg-green-600 border-green-400 shadow-[0_0_30px_rgba(34,197,94,0.6)] text-white z-10 scale-105";
+                        b.querySelector('.option-letter').className = "w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-white/20 text-white option-letter";
+                    } else if (i === index) {
+                        // Se errou, a escolhida fica vermelha
+                        b.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center bg-red-600 border-red-400 text-white opacity-80";
+                        b.querySelector('.option-letter').className = "w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-white/20 text-white option-letter";
+                    } else {
+                        // Outras ficam cinzentas
+                        b.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center bg-gray-900/50 border-gray-700 opacity-40 text-gray-400";
+                        b.querySelector('.option-letter').className = "w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-gray-700 text-gray-500 option-letter";
+                    }
+                });
+
+                // Aguarda mais 1s para o utilizador ver o resultado, e avança/termina
+                setTimeout(() => {
+                    if (isCorrect) {
+                        if (currentIndex === 19) {
+                            endGame('won', prizeLadder[19]);
+                        } else {
+                            earnedMoney = prizeLadder[currentIndex];
+                            currentIndex++;
+                            renderQuestion();
+                        }
+                    } else {
+                        const prevPrize = currentIndex === 0 ? 0 : prizeLadder[currentIndex - 1];
+                        endGame('lost', prevPrize / 2);
+                    }
+                }, 1500);
+
+            }, 1500); // Tempo do suspense amarelo
+        };
+
+        const handleStop = () => {
+            if (isRevealing) return;
+            const prevPrize = currentIndex === 0 ? 0 : prizeLadder[currentIndex - 1];
+            endGame('stopped', prevPrize);
+        };
+
+        const endGame = (status, prize) => {
+            earnedMoney = prize;
+            document.getElementById('ui-end-prize').innerText = formatMoney(earnedMoney);
+            
+            let title = "";
+            let iconHtml = "";
+
+            if (status === 'won') {
+                title = "FICASTE MILIONÁRIO!";
+                iconHtml = icons.trophy;
+            } else if (status === 'stopped') {
+                title = "ATITUDE SÁBIA!";
+                iconHtml = icons.hand;
+            } else {
+                title = "QUE PENA, ERRASTE!";
+                iconHtml = icons.xcircle;
             }
 
-            return (
-              <button
-                key={idx}
-                onClick={() => handleAnswer(idx)}
-                disabled={isRevealing}
-                className={`p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center ${!isRevealing && 'hover:-translate-y-1'} ${btnClass}`}
-              >
-                <span className={`w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg ${letterBg}`}>
-                  {['A', 'B', 'C', 'D'][idx]}
-                </span>
-                <span className="leading-tight">{opt.text}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+            document.getElementById('ui-end-title').innerText = title;
+            document.getElementById('ui-end-icon').innerHTML = iconHtml;
 
-    </div>
-  );
-}
+            showScreen('end');
+        };
+
+        // Inicializar a primeira tela
+        showScreen('start');
+
+    </script>
+</body>
+</html>
