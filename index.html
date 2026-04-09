@@ -1,5 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, HelpCircle, AlertCircle, Play, Brain, Globe, FlaskConical, BookOpen, Hand, CheckCircle2, XCircle } from 'lucide-react';
+
+/**
+ * ==========================================
+ * INSTRUÇÕES PARA PUBLICAR NO GITHUB PAGES
+ * ==========================================
+ * 1. Cria um projeto React usando Vite: `npm create vite@latest milhao-palmyrao -- --template react`
+ * 2. Entra na pasta: `cd milhao-palmyrao` e instala as dependências: `npm install`
+ * 3. Instala o Tailwind CSS seguindo a documentação oficial do Vite + Tailwind.
+ * 4. Substitui o conteúdo do ficheiro `src/App.jsx` por todo este código.
+ * 5. (Opcional) Instala o `gh-pages` para publicar: `npm install gh-pages --save-dev`
+ * 6. Adiciona `"homepage": "https://<TEU-USUARIO>.github.io/<NOME-DO-REPO>"` no package.json
+ * 7. Executa `npm run build` e envia para o teu repositório!
+ * * NOTA: Todos os ícones foram convertidos para SVG nativo para não precisares de instalar o `lucide-react`.
+ */
+
+// --- ÍCONES SVG NATIVOS (Sem dependências externas) ---
+const IconTrophy = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/></svg>;
+const IconPlay = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="5 3 19 12 5 21 5 3"/></svg>;
+const IconBrain = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>;
+const IconGlobe = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>;
+const IconFlaskConical = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><line x1="5.5" x2="18.5" y1="16" y2="16"/></svg>;
+const IconBookOpen = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
+const IconHand = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>;
+const IconXCircle = ({ className, size = 24 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>;
 
 // --- BANCO DE QUESTÕES ---
 const questionBank = [
@@ -206,14 +229,14 @@ export default function App() {
     return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
   };
 
-  // Ícones dinâmicos por matéria
+  // Ícones dinâmicos por matéria (usando componentes SVG locais)
   const getSubjectIcon = (subject) => {
     switch(subject) {
-      case 'portugues': return <BookOpen className="text-yellow-300 w-8 h-8" />;
-      case 'historia': return <Globe className="text-orange-300 w-8 h-8" />;
-      case 'geografia': return <Globe className="text-green-300 w-8 h-8" />;
-      case 'ciencias': return <FlaskConical className="text-blue-300 w-8 h-8" />;
-      default: return <Brain className="text-white w-8 h-8" />;
+      case 'portugues': return <IconBookOpen className="text-yellow-300 w-8 h-8" />;
+      case 'historia': return <IconGlobe className="text-orange-300 w-8 h-8" />;
+      case 'geografia': return <IconGlobe className="text-green-300 w-8 h-8" />;
+      case 'ciencias': return <IconFlaskConical className="text-blue-300 w-8 h-8" />;
+      default: return <IconBrain className="text-white w-8 h-8" />;
     }
   };
 
@@ -223,7 +246,7 @@ export default function App() {
       <div className="min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900 via-indigo-950 to-black flex flex-col items-center justify-center p-4 text-white font-sans">
         <div className="bg-white/5 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(30,58,138,0.5)] text-center max-w-3xl w-full">
           <div className="flex justify-center mb-6">
-            <Trophy className="w-28 h-28 text-yellow-400 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-bounce" />
+            <IconTrophy className="w-28 h-28 text-yellow-400 drop-shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-bounce" />
           </div>
           <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 mb-6 drop-shadow-lg tracking-tight">
             Milhão do Palmyrão
@@ -237,7 +260,7 @@ export default function App() {
             onClick={startGame}
             className="group relative px-10 py-5 bg-gradient-to-b from-yellow-300 to-yellow-600 hover:from-yellow-200 hover:to-yellow-500 text-blue-950 font-black text-2xl uppercase tracking-widest rounded-full shadow-[0_0_30px_rgba(250,204,21,0.5)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center mx-auto"
           >
-            <Play className="mr-3 w-8 h-8" fill="currentColor" />
+            <IconPlay className="mr-3 w-8 h-8" />
             Iniciar Partida
           </button>
         </div>
@@ -250,9 +273,9 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900 via-indigo-950 to-black flex flex-col items-center justify-center p-4 text-white font-sans">
         <div className="bg-white/10 backdrop-blur-xl p-10 rounded-3xl border border-white/20 shadow-2xl text-center max-w-xl w-full">
-          {gameState === 'won' && <Trophy className="w-24 h-24 text-yellow-400 mx-auto mb-4 animate-bounce drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]" />}
-          {gameState === 'stopped' && <Hand className="w-24 h-24 text-blue-400 mx-auto mb-4" />}
-          {gameState === 'lost' && <XCircle className="w-24 h-24 text-red-500 mx-auto mb-4" />}
+          {gameState === 'won' && <IconTrophy className="w-24 h-24 text-yellow-400 mx-auto mb-4 animate-bounce drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]" />}
+          {gameState === 'stopped' && <IconHand className="w-24 h-24 text-blue-400 mx-auto mb-4" />}
+          {gameState === 'lost' && <IconXCircle className="w-24 h-24 text-red-500 mx-auto mb-4" />}
           
           <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
             {gameState === 'won' ? 'FICASTE MILIONÁRIO!' : gameState === 'stopped' ? 'ATITUDE SÁBIA!' : 'QUE PENA, ERRASTE!'}
@@ -288,7 +311,7 @@ export default function App() {
         <div className="flex flex-row md:flex-col justify-between md:justify-start items-center md:items-start mb-8">
           <div>
             <div className="text-yellow-400 font-bold text-2xl flex items-center gap-3">
-              <Trophy size={24}/> Questão {currentIndex + 1}/20
+              <IconTrophy size={24}/> Questão {currentIndex + 1}/20
             </div>
             <div className="text-blue-300 text-sm mt-2 uppercase tracking-widest font-semibold bg-blue-900/50 inline-block px-3 py-1 rounded-full border border-blue-500/30">
               Nível {currentQ.level === 'facil' ? 'Fácil' : currentQ.level === 'medio' ? 'Médio' : 'Difícil'}
