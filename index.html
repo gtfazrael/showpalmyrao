@@ -1,5 +1,6 @@
+```html
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,6 @@
     <!-- Tailwind CSS via CDN para os estilos -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Pequenos ajustes para animações suaves */
         body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms; }
     </style>
@@ -25,11 +25,10 @@
                 Milhão do Palmyrão
             </h1>
             <p class="text-xl text-blue-100 mb-10 font-light max-w-2xl mx-auto">
-                Teste os seus conhecimentos em 20 níveis de dificuldade crescente! 
-                Domine os Descritores de Português e explore o mundo das Ciências e Humanidades.
+                Teste seus conhecimentos em 20 níveis de dificuldade! 
+                Metade do jogo foca nos Descritores do SARESP (Língua Portuguesa) e a outra metade em Ciências Humanas e da Natureza.
             </p>
             <button onclick="startGame()" class="group relative px-10 py-5 bg-gradient-to-b from-yellow-300 to-yellow-600 hover:from-yellow-200 hover:to-yellow-500 text-blue-950 font-black text-2xl uppercase tracking-widest rounded-full shadow-[0_0_30px_rgba(250,204,21,0.5)] transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center mx-auto cursor-pointer">
-                <!-- Ícone Play -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 Iniciar Partida
             </button>
@@ -56,7 +55,6 @@
                 </div>
             </div>
 
-            <!-- Quadro de Valores -->
             <div class="grid grid-cols-3 md:grid-cols-1 gap-3 text-center md:text-left mt-auto mb-6">
                 <div class="bg-gradient-to-r from-green-600/20 to-green-900/20 border border-green-500/40 rounded-xl p-3 md:p-5 shadow-[inset_0_0_20px_rgba(34,197,94,0.1)]">
                     <div class="text-green-300 text-xs md:text-sm uppercase font-bold tracking-wider mb-1">Acertar</div>
@@ -80,17 +78,12 @@
         <!-- Área Central -->
         <div class="flex-1 p-4 md:p-10 flex flex-col justify-center max-w-5xl mx-auto w-full relative">
             <div class="bg-blue-950/50 backdrop-blur-md p-6 md:p-12 rounded-[2rem] border border-blue-400/30 shadow-[0_0_40px_rgba(30,58,138,0.3)] mb-8 relative">
-                <div id="ui-subject-icon" class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 p-3 rounded-full border-4 border-[#0b1120] shadow-lg">
-                    <!-- Icon injectado por JS -->
-                </div>
+                <div id="ui-subject-icon" class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 p-3 rounded-full border-4 border-[#0b1120] shadow-lg"></div>
                 <h2 id="ui-question-text" class="text-2xl md:text-4xl font-medium text-center leading-snug mt-4 text-blue-50">
-                    A carregar questão...
+                    Carregando questão...
                 </h2>
             </div>
-
-            <!-- Alternativas (Injectadas via JS) -->
-            <div id="ui-options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            </div>
+            <div id="ui-options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"></div>
         </div>
     </div>
 
@@ -98,25 +91,19 @@
     <div id="screen-end" class="min-h-screen hidden flex-col items-center justify-center p-4">
         <div class="bg-white/10 backdrop-blur-xl p-10 rounded-3xl border border-white/20 shadow-2xl text-center max-w-xl w-full">
             <div id="ui-end-icon" class="flex justify-center mb-4"></div>
-            
-            <h1 id="ui-end-title" class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-                RESULTADO
-            </h1>
-            
-            <p class="text-xl text-blue-200 mb-6 font-light">O teu prémio final foi de:</p>
+            <h1 id="ui-end-title" class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">RESULTADO</h1>
+            <p class="text-xl text-blue-200 mb-6 font-light">Seu prêmio final foi de:</p>
             <div id="ui-end-prize" class="text-6xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 mb-10 drop-shadow-md">
                 R$ 0
             </div>
-
             <button onclick="showScreen('start')" class="px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-xl rounded-full shadow-lg transition-all transform hover:scale-105 backdrop-blur-sm cursor-pointer">
-                Voltar ao Início
+                Jogar Novamente
             </button>
         </div>
     </div>
 
     <!-- ==================== SCRIPT DO JOGO ==================== -->
     <script>
-        // Ícones em SVG
         const icons = {
             trophy: '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 mx-auto animate-bounce drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0z"/></svg>',
             hand: '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400 mx-auto"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
@@ -128,87 +115,163 @@
             default: '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>'
         };
 
+        // BANCO EXPANDIDO: 150 Questões (50 Fáceis, 50 Médias, 50 Difíceis)
         const questionBank = [
-            // FÁCIL
-            { id: 1, level: 'facil', subject: 'portugues', text: 'SARESP (D3) - Leia: "Quando viu o tamanho da prova, o aluno ficou de cabelo em pé." A expressão "de cabelo em pé" significa que ele ficou:', options: ['Penteado', 'Assustado/Preocupado', 'Alegre', 'Com frio'], correct: 1 },
-            { id: 2, level: 'facil', subject: 'portugues', text: 'SARESP (D1) - "João guardou o seu diário na gaveta de meias para a irmã não ler." Onde João guardou o diário?', options: ['Na mochila', 'Debaixo da cama', 'Na gaveta de meias', 'No armário da irmã'], correct: 2 },
-            { id: 3, level: 'facil', subject: 'historia', text: 'Quem foi o primeiro imperador do Brasil após a Independência em 1822?', options: ['D. João VI', 'D. Pedro II', 'Tiradentes', 'D. Pedro I'], correct: 3 },
-            { id: 4, level: 'facil', subject: 'geografia', text: 'Qual é o nome do nosso planeta e qual a sua forma aproximada?', options: ['Marte - Quadrada', 'Terra - Plana', 'Terra - Esférica', 'Vénus - Esférica'], correct: 2 },
-            { id: 5, level: 'facil', subject: 'ciencias', text: 'Qual órgão do corpo humano é o principal responsável por bombear o sangue?', options: ['Pulmão', 'Cérebro', 'Estômago', 'Coração'], correct: 3 },
-            { id: 6, level: 'facil', subject: 'portugues', text: 'SARESP (D9) - O objetivo principal de um texto de "Receita Culinária" é:', options: ['Contar uma história engraçada', 'Ensinar a preparar um alimento', 'Noticiar um facto do dia a dia', 'Fazer uma propaganda'], correct: 1 },
-            { id: 7, level: 'facil', subject: 'historia', text: 'A data de 22 de abril de 1500 marca qual evento importante na História do Brasil?', options: ['Fim da escravatura', 'Proclamação da República', 'Chegada dos portugueses', 'Independência do Brasil'], correct: 2 },
-            { id: 8, level: 'facil', subject: 'geografia', text: 'Qual é o maior país da América do Sul em extensão territorial?', options: ['Argentina', 'Brasil', 'Colômbia', 'Chile'], correct: 1 },
-            { id: 9, level: 'facil', subject: 'ciencias', text: 'A água é essencial para a vida. Qual é a sua fórmula química?', options: ['CO2', 'NaCl', 'O2', 'H2O'], correct: 3 },
-            { id: 10, level: 'facil', subject: 'portugues', text: 'SARESP (D12) - "O leão, rei da selva, dormia profundamente." O termo "rei da selva" refere-se a quem?', options: ['Ao sono', 'À selva', 'Ao leão', 'A um caçador'], correct: 2 },
-            { id: 11, level: 'facil', subject: 'historia', text: 'Os povos indígenas já habitavam o Brasil antes de 1500. Como eram chamadas as suas habitações?', options: ['Castelos', 'Ocas', 'Iglus', 'Prédios'], correct: 1 },
-            { id: 12, level: 'facil', subject: 'geografia', text: 'Qual das opções abaixo é considerada uma zona rural?', options: ['Centro da cidade', 'Bairro com muitos prédios', 'Fazenda com plantações', 'Centro Comercial'], correct: 2 },
-            { id: 13, level: 'facil', subject: 'ciencias', text: 'Qual astro é responsável por iluminar e aquecer a Terra durante o dia?', options: ['A Lua', 'Marte', 'O Sol', 'Júpiter'], correct: 2 },
-            { id: 14, level: 'facil', subject: 'portugues', text: 'SARESP (D4) - "A Maria abriu o guarda-chuva antes de sair de casa." O que podemos deduzir (inferir)?', options: ['Fazia muito sol.', 'Estava a chover ou ia chover.', 'Ela ia para a praia.', 'Ela estava atrasada.'], correct: 1 },
-            { id: 15, level: 'facil', subject: 'historia', text: 'Quem assinou a Lei Áurea em 1888, abolindo a escravatura no Brasil?', options: ['Princesa Isabel', 'Zumbi dos Palmares', 'D. Pedro I', 'Duque de Caxias'], correct: 0 },
-            { id: 16, level: 'facil', subject: 'geografia', text: 'O Brasil é dividido em quantas regiões pelo IBGE?', options: ['Três', 'Cinco', 'Sete', 'Nove'], correct: 1 },
-            { id: 17, level: 'facil', subject: 'ciencias', text: 'Animais que se alimentam exclusivamente de plantas são chamados de:', options: ['Carnívoros', 'Herbívoros', 'Omnívoros', 'Detritívoros'], correct: 1 },
-            { id: 18, level: 'facil', subject: 'portugues', text: 'SARESP (D2) - O antônimo (palavra de sentido contrário) de "Barulho" é:', options: ['Silêncio', 'Ruído', 'Confusão', 'Grito'], correct: 0 },
-            { id: 19, level: 'facil', subject: 'historia', text: 'Qual foi a primeira capital do Brasil?', options: ['Rio de Janeiro', 'Brasília', 'São Paulo', 'Salvador'], correct: 3 },
-            { id: 20, level: 'facil', subject: 'geografia', text: 'A Amazônia está localizada predominantemente em qual região brasileira?', options: ['Sul', 'Nordeste', 'Centro-Oeste', 'Norte'], correct: 3 },
-            { id: 21, level: 'facil', subject: 'ciencias', text: 'Qual é o sentido usado para ouvir o som dos pássaros?', options: ['Visão', 'Olfato', 'Tato', 'Audição'], correct: 3 },
-            { id: 22, level: 'facil', subject: 'portugues', text: 'SARESP (D6) - Uma fábula como "A Lebre e a Tartaruga" costuma ter como tema central:', options: ['Uma notícia urgente', 'Uma receita médica', 'Uma lição de moral', 'As regras de um jogo'], correct: 2 },
-            { id: 23, level: 'facil', subject: 'historia', text: 'O feriado de 7 de setembro comemora o que no Brasil?', options: ['O descobrimento', 'A Independência', 'A Proclamação da República', 'O Dia do Índio'], correct: 1 },
-            { id: 24, level: 'facil', subject: 'geografia', text: 'Qual oceano banha o litoral do Brasil?', options: ['Oceano Pacífico', 'Oceano Índico', 'Oceano Ártico', 'Oceano Atlântico'], correct: 3 },
-            { id: 25, level: 'facil', subject: 'ciencias', text: 'Que parte da planta geralmente fixa a árvore no solo?', options: ['As folhas', 'As raízes', 'Os frutos', 'As flores'], correct: 1 },
+            // ================= FÁCIL (50) =================
+            { id: 1, level: 'facil', subject: 'portugues', text: 'SARESP (D3) - Leia: "Quando viu o tamanho da prova, o aluno ficou de cabelo em pé." O que significa "de cabelo em pé"?', options: ['Penteado', 'Assustado/Preocupado', 'Alegre', 'Com frio'], correct: 1 },
+            { id: 2, level: 'facil', subject: 'portugues', text: 'SARESP (D1) - "João guardou seu diário na gaveta de meias." Onde João guardou o diário?', options: ['Na mochila', 'Embaixo da cama', 'Na gaveta de meias', 'No armário'], correct: 2 },
+            { id: 3, level: 'facil', subject: 'portugues', text: 'SARESP (D9) - O objetivo principal de um texto de "Receita Culinária" é:', options: ['Contar uma história', 'Ensinar a preparar um alimento', 'Noticiar um fato', 'Fazer propaganda'], correct: 1 },
+            { id: 4, level: 'facil', subject: 'portugues', text: 'SARESP (D12) - "O leão, rei da selva, dormia profundamente." O termo "rei da selva" refere-se a:', options: ['Ao sono', 'À selva', 'Ao leão', 'A um caçador'], correct: 2 },
+            { id: 5, level: 'facil', subject: 'portugues', text: 'SARESP (D4) - "Maria abriu o guarda-chuva antes de sair." O que podemos deduzir?', options: ['Fazia sol', 'Estava chovendo', 'Ia à praia', 'Estava atrasada'], correct: 1 },
+            { id: 6, level: 'facil', subject: 'portugues', text: 'SARESP (D2) - O antônimo de "Barulho" é:', options: ['Silêncio', 'Ruído', 'Confusão', 'Grito'], correct: 0 },
+            { id: 7, level: 'facil', subject: 'portugues', text: 'SARESP (D6) - Uma fábula como "A Lebre e a Tartaruga" costuma ter como tema central:', options: ['Uma notícia', 'Uma receita', 'Uma lição de moral', 'As regras de um jogo'], correct: 2 },
+            { id: 8, level: 'facil', subject: 'portugues', text: 'SARESP (D1) - "O cachorro enterrou o osso no quintal de trás." Onde o osso foi enterrado?', options: ['Na sala', 'No telhado', 'No quintal de trás', 'Na rua'], correct: 2 },
+            { id: 9, level: 'facil', subject: 'portugues', text: 'SARESP (D3) - "Ele sempre dá com a língua nos dentes." Essa expressão significa que ele:', options: ['Vai ao dentista', 'Fala demais/Não guarda segredo', 'Tem dor de dente', 'Come muito rápido'], correct: 1 },
+            { id: 10, level: 'facil', subject: 'portugues', text: 'SARESP (D4) - "As ruas estavam alagadas e os carros parados." É possível inferir que:', options: ['Houve uma grande tempestade', 'Havia uma festa na rua', 'Era feriado', 'Os semáforos quebraram'], correct: 0 },
+            { id: 11, level: 'facil', subject: 'portugues', text: 'SARESP (D9) - Para que serve um "Manual de Instruções"?', options: ['Para emocionar o leitor', 'Para dar uma notícia urgente', 'Para orientar a montagem ou uso de algo', 'Para fazer rir'], correct: 2 },
+            { id: 12, level: 'facil', subject: 'portugues', text: 'SARESP (D2) - Qual é o sinônimo (palavra de sentido igual) de "Feliz"?', options: ['Triste', 'Alegre', 'Nervoso', 'Cansado'], correct: 1 },
+            { id: 13, level: 'facil', subject: 'portugues', text: 'SARESP (D12) - "A menina encontrou uma boneca. Ela estava suja." O pronome "Ela" refere-se a:', options: ['Menina', 'Boneca', 'Sujeira', 'Mãe'], correct: 1 },
+            { id: 14, level: 'facil', subject: 'portugues', text: 'SARESP (D6) - Se um texto fala de lobos, bruxas e príncipes, qual é o gênero?', options: ['Notícia', 'Receita', 'Conto de fadas', 'Bula de remédio'], correct: 2 },
+            { id: 15, level: 'facil', subject: 'portugues', text: 'SARESP (D1) - "Na feira, comprei maçã, banana e pera." O que não foi comprado?', options: ['Maçã', 'Banana', 'Uva', 'Pera'], correct: 2 },
+            { id: 16, level: 'facil', subject: 'portugues', text: 'SARESP (D3) - A expressão "Pagar o pato" significa:', options: ['Comprar uma ave', 'Ser responsabilizado por algo que não fez', 'Ficar rico', 'Ir ao restaurante'], correct: 1 },
+            { id: 17, level: 'facil', subject: 'portugues', text: 'SARESP (D4) - "O relógio tocou às 6h e Pedro pulou da cama." Inferimos que Pedro:', options: ['Acordou atrasado', 'Gosta de dormir', 'Acordou para iniciar o dia', 'Estava doente'], correct: 2 },
+            { id: 18, level: 'facil', subject: 'portugues', text: 'SARESP (D9) - Qual a finalidade de uma "Bula de Remédio"?', options: ['Informar como usar o medicamento', 'Vender um brinquedo', 'Contar uma piada', 'Convidar para uma festa'], correct: 0 },
+            { id: 19, level: 'facil', subject: 'portugues', text: 'SARESP (D2) - O plural de "Cão" é:', options: ['Cãos', 'Cães', 'Cões', 'Cãozes'], correct: 1 },
+            { id: 20, level: 'facil', subject: 'portugues', text: 'SARESP (D12) - "A árvore é antiga, seus galhos são enormes." O termo "seus" refere-se:', options: ['Aos galhos', 'À antiguidade', 'Ao tamanho', 'À árvore'], correct: 3 },
+            { id: 21, level: 'facil', subject: 'portugues', text: 'SARESP (D6) - O tema de um dicionário é:', options: ['Ensinar contas', 'Explicar o significado das palavras', 'Contar fatos históricos', 'Mostrar mapas'], correct: 1 },
+            { id: 22, level: 'facil', subject: 'portugues', text: 'SARESP (D1) - "O jogo será na quadra azul da escola às 15h." Onde será o jogo?', options: ['No pátio', 'No campo', 'Na quadra azul', 'Em casa'], correct: 2 },
+            { id: 23, level: 'facil', subject: 'portugues', text: 'SARESP (D3) - "Chorar sobre o leite derramado" significa:', options: ['Limpar o chão', 'Lamentar algo que já aconteceu e não tem volta', 'Ter alergia', 'Fazer compras'], correct: 1 },
+            { id: 24, level: 'facil', subject: 'portugues', text: 'SARESP (D4) - "Ele estava suando muito e ofegante." Inferimos que ele:', options: ['Fez esforço físico', 'Estava com frio', 'Estava dormindo', 'Estava nadando'], correct: 0 },
+            { id: 25, level: 'facil', subject: 'portugues', text: 'SARESP (D2) - O antônimo de "Escuro" é:', options: ['Noite', 'Sombra', 'Claro', 'Preto'], correct: 2 },
+            { id: 26, level: 'facil', subject: 'historia', text: 'Quem foi o primeiro imperador do Brasil após a Independência em 1822?', options: ['Dom João VI', 'Dom Pedro II', 'Tiradentes', 'Dom Pedro I'], correct: 3 },
+            { id: 27, level: 'facil', subject: 'geografia', text: 'Qual é a forma aproximada do planeta Terra?', options: ['Quadrada', 'Plana', 'Esférica', 'Triangular'], correct: 2 },
+            { id: 28, level: 'facil', subject: 'ciencias', text: 'Qual órgão é o principal responsável por bombear o sangue?', options: ['Pulmão', 'Cérebro', 'Estômago', 'Coração'], correct: 3 },
+            { id: 29, level: 'facil', subject: 'historia', text: 'O que comemoramos no dia 22 de abril de 1500?', options: ['Fim da escravidão', 'Chegada dos portugueses ao Brasil', 'Proclamação da República', 'Independência do Brasil'], correct: 1 },
+            { id: 30, level: 'facil', subject: 'geografia', text: 'Qual é o maior país da América do Sul?', options: ['Argentina', 'Brasil', 'Colômbia', 'Chile'], correct: 1 },
+            { id: 31, level: 'facil', subject: 'ciencias', text: 'Qual é a fórmula química da água?', options: ['CO2', 'NaCl', 'O2', 'H2O'], correct: 3 },
+            { id: 32, level: 'facil', subject: 'historia', text: 'Como eram chamadas as habitações dos povos indígenas brasileiros?', options: ['Castelos', 'Ocas', 'Iglus', 'Prédios'], correct: 1 },
+            { id: 33, level: 'facil', subject: 'geografia', text: 'Uma fazenda com plantações é considerada uma zona:', options: ['Urbana', 'Litorânea', 'Rural', 'Metropolitana'], correct: 2 },
+            { id: 34, level: 'facil', subject: 'ciencias', text: 'Que astro ilumina e aquece a Terra durante o dia?', options: ['Lua', 'Marte', 'Sol', 'Júpiter'], correct: 2 },
+            { id: 35, level: 'facil', subject: 'historia', text: 'Quem assinou a Lei Áurea em 1888, abolindo a escravidão?', options: ['Princesa Isabel', 'Zumbi dos Palmares', 'Dom Pedro I', 'Duque de Caxias'], correct: 0 },
+            { id: 36, level: 'facil', subject: 'geografia', text: 'O Brasil é dividido em quantas regiões?', options: ['Três', 'Cinco', 'Sete', 'Nove'], correct: 1 },
+            { id: 37, level: 'facil', subject: 'ciencias', text: 'Animais que comem apenas plantas são chamados:', options: ['Carnívoros', 'Herbívoros', 'Onívoros', 'Detritívoros'], correct: 1 },
+            { id: 38, level: 'facil', subject: 'historia', text: 'Qual foi a primeira capital do Brasil?', options: ['Rio de Janeiro', 'Brasília', 'São Paulo', 'Salvador'], correct: 3 },
+            { id: 39, level: 'facil', subject: 'geografia', text: 'A Amazônia fica predominantemente em qual região brasileira?', options: ['Sul', 'Nordeste', 'Centro-Oeste', 'Norte'], correct: 3 },
+            { id: 40, level: 'facil', subject: 'ciencias', text: 'Que sentido usamos para ouvir o som dos pássaros?', options: ['Visão', 'Olfato', 'Audição', 'Tato'], correct: 2 },
+            { id: 41, level: 'facil', subject: 'historia', text: 'O feriado de 7 de setembro comemora o quê?', options: ['Descobrimento', 'Independência', 'Proclamação da República', 'Dia do Índio'], correct: 1 },
+            { id: 42, level: 'facil', subject: 'geografia', text: 'Qual oceano banha o litoral do Brasil?', options: ['Pacífico', 'Índico', 'Ártico', 'Atlântico'], correct: 3 },
+            { id: 43, level: 'facil', subject: 'ciencias', text: 'Que parte da planta fixa a árvore no solo?', options: ['Folhas', 'Raízes', 'Frutos', 'Flores'], correct: 1 },
+            { id: 44, level: 'facil', subject: 'historia', text: 'Tiradentes foi um dos líderes de qual movimento?', options: ['Revolução Farroupilha', 'Inconfidência Mineira', 'Guerra de Canudos', 'Sabinada'], correct: 1 },
+            { id: 45, level: 'facil', subject: 'geografia', text: 'Qual a capital do Brasil atualmente?', options: ['Rio de Janeiro', 'Salvador', 'Brasília', 'São Paulo'], correct: 2 },
+            { id: 46, level: 'facil', subject: 'ciencias', text: 'O processo da água virando vapor chama-se:', options: ['Solidificação', 'Evaporação', 'Condensação', 'Fusão'], correct: 1 },
+            { id: 47, level: 'facil', subject: 'historia', text: 'Em que tipo de propriedades a cana-de-açúcar era cultivada no Brasil colonial?', options: ['Fábricas', 'Engenhos', 'Minas', 'Quilombos'], correct: 1 },
+            { id: 48, level: 'facil', subject: 'geografia', text: 'Em que continente o Brasil está localizado?', options: ['África', 'Europa', 'Ásia', 'América'], correct: 3 },
+            { id: 49, level: 'facil', subject: 'ciencias', text: 'Quantos planetas compõem o nosso Sistema Solar principal?', options: ['6', '8', '10', '12'], correct: 1 },
+            { id: 50, level: 'facil', subject: 'historia', text: 'Qual era a principal mão de obra nos engenhos de açúcar coloniais?', options: ['Imigrantes', 'Escravizados africanos', 'Trabalhadores assalariados', 'Nobres portugueses'], correct: 1 },
 
-            // MÉDIO
-            { id: 26, level: 'medio', subject: 'portugues', text: 'SARESP (D11) - Assinale a alternativa que expressa uma OPINIÃO e não um fato:', options: ['O Brasil fica na América do Sul.', 'Choveu em São Paulo ontem.', 'A Matemática é a melhor disciplina de todas.', 'A água entra em ebulição a 100°C.'], correct: 2 },
-            { id: 27, level: 'medio', subject: 'historia', text: 'Qual ciclo econômico foi responsável pelo grande desenvolvimento e urbanização da região Sudeste no século XIX e início do XX?', options: ['Ciclo do Ouro', 'Ciclo da Borracha', 'Ciclo do Café', 'Ciclo do Pau-Brasil'], correct: 2 },
-            { id: 28, level: 'medio', subject: 'geografia', text: 'A Caatinga é um bioma exclusivamente brasileiro. Em qual região ela predomina?', options: ['Sul', 'Sudeste', 'Nordeste', 'Norte'], correct: 2 },
-            { id: 29, level: 'medio', subject: 'ciencias', text: 'Como se chama o processo pelo qual as plantas produzem o seu próprio alimento utilizando a luz solar?', options: ['Respiração', 'Transpiração', 'Polinização', 'Fotossíntese'], correct: 3 },
-            { id: 30, level: 'medio', subject: 'portugues', text: 'SARESP (D14) - Na frase: "Ele disse que viria... mas não tenho a certeza", as reticências (...) indicam:', options: ['Certeza absoluta', 'Uma hesitação ou dúvida', 'Uma pergunta', 'Um susto forte'], correct: 1 },
-            { id: 31, level: 'medio', subject: 'historia', text: 'Quem liderou o movimento da Inconfidência Mineira contra a Coroa Portuguesa?', options: ['D. Pedro I', 'Zumbi dos Palmares', 'Joaquim José da Silva Xavier (Tiradentes)', 'Duque de Caxias'], correct: 2 },
-            { id: 32, level: 'medio', subject: 'geografia', text: 'O que é o êxodo rural?', options: ['A migração de pessoas do campo para a cidade.', 'O plantio em larga escala.', 'A viagem de férias para quintas.', 'O aumento da população nas cidades devido a nascimentos.'], correct: 0 },
-            { id: 33, level: 'medio', subject: 'ciencias', text: 'Os seres humanos possuem quantos cromossomas nas suas células somáticas normais?', options: ['23', '46', '48', '50'], correct: 1 },
-            { id: 34, level: 'medio', subject: 'portugues', text: 'SARESP (D6) - Se um texto fala sobre o aquecimento global, derretimento de glaciares e aumento do nível do mar, qual é o seu tema?', options: ['Desportos de inverno', 'Turismo na Antártida', 'Alterações climáticas', 'A vida dos pinguins'], correct: 2 },
-            { id: 35, level: 'medio', subject: 'historia', text: 'O período em que o Brasil foi governado por militares, com início em 1964, é chamado de:', options: ['Estado Novo', 'República da Espada', 'Ditadura Militar', 'Era Vargas'], correct: 2 },
-            { id: 36, level: 'medio', subject: 'geografia', text: 'Qual o nome do bloco econômico formado pelo Brasil, Argentina, Paraguai e Uruguai?', options: ['União Europeia', 'NAFTA', 'Mercosul', 'BRICS'], correct: 2 },
-            { id: 37, level: 'medio', subject: 'ciencias', text: 'A passagem do estado sólido direto para o estado gasoso, sem passar pelo líquido, chama-se:', options: ['Evaporação', 'Condensação', 'Fusão', 'Sublimação'], correct: 3 },
-            { id: 38, level: 'medio', subject: 'portugues', text: 'SARESP (D13) - O humor de uma tirinha muitas vezes é provocado por uma quebra de expectativa. Isso significa que:', options: ['O final é sempre triste.', 'Acontece algo surpreendente que o leitor não esperava.', 'O texto usa palavras muito difíceis.', 'Os personagens não falam.'], correct: 1 },
-            { id: 39, level: 'medio', subject: 'historia', text: 'Em que ano ocorreu a Proclamação da República do Brasil?', options: ['1822', '1888', '1889', '1930'], correct: 2 },
-            { id: 40, level: 'medio', subject: 'geografia', text: 'Qual linha imaginária corta o Brasil na região Norte?', options: ['Trópico de Capricórnio', 'Trópico de Câncer', 'Meridiano de Greenwich', 'Linha do Equador'], correct: 3 },
-            { id: 41, level: 'medio', subject: 'ciencias', text: 'Qual cientista formulou a Teoria da Evolução por Seleção Natural?', options: ['Albert Einstein', 'Isaac Newton', 'Charles Darwin', 'Galileu Galilei'], correct: 2 },
-            { id: 42, level: 'medio', subject: 'portugues', text: 'SARESP (D15) - Em "Estudou muito, PORTANTO passou no exame", a palavra em destaque indica uma:', options: ['Condição', 'Conclusão', 'Oposição', 'Causa'], correct: 1 },
-            { id: 43, level: 'medio', subject: 'historia', text: 'Getúlio Vargas governou o Brasil por muitos anos. Como ficou conhecido o seu período ditatorial de 1937 a 1945?', options: ['República Velha', 'Estado Novo', 'Anos de Chumbo', 'Nova República'], correct: 1 },
-            { id: 44, level: 'medio', subject: 'geografia', text: 'Qual país sul-americano faz fronteira com o Brasil, mas NÃO tem saída para o mar?', options: ['Colômbia', 'Uruguai', 'Bolívia', 'Peru'], correct: 2 },
-            { id: 45, level: 'medio', subject: 'ciencias', text: 'Qual vitamina é ativada no corpo humano pela exposição saudável ao Sol?', options: ['Vitamina A', 'Vitamina C', 'Vitamina D', 'Vitamina B12'], correct: 2 },
-            { id: 46, level: 'medio', subject: 'portugues', text: 'SARESP (D10) - O uso de um argumento de autoridade num texto serve para:', options: ['Deixar o texto mais engraçado', 'Confundir o leitor', 'Dar credibilidade e sustentar uma tese', 'Reduzir o tamanho do texto'], correct: 2 },
-            { id: 47, level: 'medio', subject: 'historia', text: 'A Guerra de Canudos (1896-1897) ocorreu em qual estado brasileiro?', options: ['São Paulo', 'Bahia', 'Pernambuco', 'Rio de Janeiro'], correct: 1 },
-            { id: 48, level: 'medio', subject: 'geografia', text: 'Qual é o clima predominante na maior parte do território brasileiro?', options: ['Tropical', 'Temperado', 'Desértico', 'Equatorial'], correct: 0 },
-            { id: 49, level: 'medio', subject: 'ciencias', text: 'Os dinossauros foram extintos em qual era geológica?', options: ['Paleozoica', 'Cenozoica', 'Mesozoica', 'Pré-Câmbrica'], correct: 2 },
-            { id: 50, level: 'medio', subject: 'portugues', text: 'SARESP (D2) - Qual das palavras abaixo é proparoxítona?', options: ['Café', 'Caderno', 'Matemática', 'Computador'], correct: 2 },
+            // ================= MÉDIO (50) =================
+            { id: 51, level: 'medio', subject: 'portugues', text: 'SARESP (D11) - Indique a alternativa que é OPINIÃO e não fato:', options: ['O Brasil fica na América do Sul.', 'Choveu em São Paulo ontem.', 'Matemática é a melhor disciplina.', 'A água ferve a 100°C.'], correct: 2 },
+            { id: 52, level: 'medio', subject: 'portugues', text: 'SARESP (D14) - "Ele disse que viria... mas não tenho certeza". As reticências indicam:', options: ['Certeza absoluta', 'Hesitação ou dúvida', 'Uma pergunta', 'Um grito'], correct: 1 },
+            { id: 53, level: 'medio', subject: 'portugues', text: 'SARESP (D6) - Texto sobre derretimento de geleiras e aumento do mar. Qual o tema?', options: ['Esportes', 'Turismo', 'Mudanças climáticas', 'Pinguins'], correct: 2 },
+            { id: 54, level: 'medio', subject: 'portugues', text: 'SARESP (D13) - O humor de uma tirinha (ex: Mafalda) costuma ocorrer por:', options: ['Linguagem formal', 'Quebra de expectativa no final', 'Falta de desenhos', 'Texto muito longo'], correct: 1 },
+            { id: 55, level: 'medio', subject: 'portugues', text: 'SARESP (D15) - "Estudou muito, PORTANTO passou." A palavra destacada indica:', options: ['Condição', 'Conclusão', 'Oposição', 'Causa'], correct: 1 },
+            { id: 56, level: 'medio', subject: 'portugues', text: 'SARESP (D10) - Usar a citação de um cientista famoso em um texto serve para:', options: ['Deixar engraçado', 'Dar credibilidade/sustentar tese', 'Confundir o leitor', 'Aumentar o tamanho do texto'], correct: 1 },
+            { id: 57, level: 'medio', subject: 'portugues', text: 'SARESP (D11) - Qual afirmação é um FATO e não opinião?', options: ['Filmes de terror são chatos.', 'O céu azul é lindo.', 'A Terra gira em torno do Sol.', 'Cachorros são melhores que gatos.'], correct: 2 },
+            { id: 58, level: 'medio', subject: 'portugues', text: 'SARESP (D14) - O ponto de exclamação (!) numa frase geralmente exprime:', options: ['Dúvida', 'Certeza matemática', 'Emoção (espanto, alegria, susto)', 'Pausa longa'], correct: 2 },
+            { id: 59, level: 'medio', subject: 'portugues', text: 'SARESP (D6) - Se um livro fala sobre escovas de dente, cáries e flúor, o tema é:', options: ['Culinária', 'Saúde bucal', 'Esportes', 'Mecânica'], correct: 1 },
+            { id: 60, level: 'medio', subject: 'portugues', text: 'SARESP (D15) - "Queria ir à praia, MAS choveu." A palavra destacada indica:', options: ['Adição', 'Oposição/Contraste', 'Conclusão', 'Causa'], correct: 1 },
+            { id: 61, level: 'medio', subject: 'portugues', text: 'SARESP (D13) - Em piadas, o desfecho engraçado depende principalmente de:', options: ['Personagens tristes', 'Duplo sentido ou situação inusitada', 'Erros gramaticais', 'Linguagem científica'], correct: 1 },
+            { id: 62, level: 'medio', subject: 'portugues', text: 'SARESP (D10) - O que é um "argumento de dados estatísticos"?', options: ['A opinião do autor', 'Uso de números e porcentagens reais', 'Uma piada no texto', 'Uma rima'], correct: 1 },
+            { id: 63, level: 'medio', subject: 'portugues', text: 'SARESP (D11) - "O bolo de chocolate estava uma delícia." Isso é:', options: ['Fato histórico', 'Regra científica', 'Opinião pessoal', 'Notícia falsa'], correct: 2 },
+            { id: 64, level: 'medio', subject: 'portugues', text: 'SARESP (D14) - Aspas (" ") são usadas para indicar que a fala ou citação:', options: ['É mentira', 'É uma pergunta', 'Pertence a outra pessoa ou destaca um termo', 'Terminou'], correct: 2 },
+            { id: 65, level: 'medio', subject: 'portugues', text: 'SARESP (D6) - O assunto principal de uma "Previsão do Tempo" é informar sobre:', options: ['Política', 'Condições climáticas futuras', 'Resultados do futebol', 'Receitas culinárias'], correct: 1 },
+            { id: 66, level: 'medio', subject: 'portugues', text: 'SARESP (D15) - "Limpou a casa, PORQUE receberia visitas." Indica:', options: ['Oposição', 'Finalidade', 'Conclusão', 'Causa/Motivo'], correct: 3 },
+            { id: 67, level: 'medio', subject: 'portugues', text: 'SARESP (D13) - O efeito de humor numa charge política serve para:', options: ['Exaltar políticos', 'Fazer uma crítica social de forma cômica', 'Apenas informar dados', 'Contar contos de fadas'], correct: 1 },
+            { id: 68, level: 'medio', subject: 'portugues', text: 'SARESP (D10) - Argumentar é:', options: ['Escrever sem sentido', 'Defender uma ideia usando razões e provas', 'Apenas concordar com tudo', 'Descrever uma paisagem'], correct: 1 },
+            { id: 69, level: 'medio', subject: 'portugues', text: 'SARESP (D11) - "A capital de Minas Gerais é Belo Horizonte." É fato ou opinião?', options: ['Fato', 'Opinião', 'Ambiguidade', 'Ironia'], correct: 0 },
+            { id: 70, level: 'medio', subject: 'portugues', text: 'SARESP (D14) - Para que serve o ponto de interrogação (?) ?', options: ['Afirmar algo', 'Indicar uma pergunta', 'Mostrar espanto', 'Separar palavras'], correct: 1 },
+            { id: 71, level: 'medio', subject: 'portugues', text: 'SARESP (D6) - "Vacinação em massa reduz internações". Qual o tema da notícia?', options: ['Violência', 'Impacto positivo da vacinação na saúde pública', 'Economia mundial', 'Educação infantil'], correct: 1 },
+            { id: 72, level: 'medio', subject: 'portugues', text: 'SARESP (D15) - "Ela chorou TANTO QUE os olhos incharam." A relação é de:', options: ['Causa e Consequência', 'Oposição', 'Adição', 'Tempo'], correct: 0 },
+            { id: 73, level: 'medio', subject: 'portugues', text: 'SARESP (D13) - Quando uma palavra tem mais de um significado, gerando humor, temos:', options: ['Ironia', 'Eufemismo', 'Ambiguidade/Polissemia', 'Pleonasmo'], correct: 2 },
+            { id: 74, level: 'medio', subject: 'portugues', text: 'SARESP (D10) - O uso de citações diretas no jornalismo serve para:', options: ['Inventar informações', 'Ocupar espaço', 'Atribuir a fala exata à fonte original', 'Rir do entrevistado'], correct: 2 },
+            { id: 75, level: 'medio', subject: 'portugues', text: 'SARESP (D14) - A vírgula (,) serve fundamentalmente para:', options: ['Terminar o texto', 'Marcar uma pequena pausa ou separar itens', 'Indicar espanto', 'Fazer perguntas'], correct: 1 },
+            { id: 76, level: 'medio', subject: 'historia', text: 'Qual ciclo econômico desenvolveu a região Sudeste no século XIX?', options: ['Ouro', 'Borracha', 'Café', 'Pau-Brasil'], correct: 2 },
+            { id: 77, level: 'medio', subject: 'geografia', text: 'A Caatinga é um bioma predominantemente de qual região?', options: ['Sul', 'Sudeste', 'Nordeste', 'Norte'], correct: 2 },
+            { id: 78, level: 'medio', subject: 'ciencias', text: 'Como as plantas produzem seu alimento usando luz solar?', options: ['Respiração', 'Transpiração', 'Polinização', 'Fotossíntese'], correct: 3 },
+            { id: 79, level: 'medio', subject: 'geografia', text: 'O que é o êxodo rural?', options: ['Migração do campo para a cidade', 'Plantio em larga escala', 'Férias na fazenda', 'Aumento da natalidade'], correct: 0 },
+            { id: 80, level: 'medio', subject: 'ciencias', text: 'Quantos cromossomos tem a célula somática humana normal?', options: ['23', '46', '48', '50'], correct: 1 },
+            { id: 81, level: 'medio', subject: 'historia', text: 'Qual ditadura ocorreu no Brasil a partir de 1964?', options: ['Estado Novo', 'República Velha', 'Ditadura Militar', 'Era Vargas'], correct: 2 },
+            { id: 82, level: 'medio', subject: 'geografia', text: 'Qual bloco econômico Brasil, Argentina, Paraguai e Uruguai fundaram?', options: ['União Europeia', 'NAFTA', 'Mercosul', 'BRICS'], correct: 2 },
+            { id: 83, level: 'medio', subject: 'ciencias', text: 'A passagem do sólido direto para o gasoso chama-se:', options: ['Evaporação', 'Condensação', 'Fusão', 'Sublimação'], correct: 3 },
+            { id: 84, level: 'medio', subject: 'historia', text: 'Em que ano ocorreu a Proclamação da República do Brasil?', options: ['1822', '1888', '1889', '1930'], correct: 2 },
+            { id: 85, level: 'medio', subject: 'geografia', text: 'Qual linha imaginária corta a região Norte do Brasil?', options: ['Capricórnio', 'Câncer', 'Greenwich', 'Equador'], correct: 3 },
+            { id: 86, level: 'medio', subject: 'ciencias', text: 'Quem formulou a Teoria da Evolução por Seleção Natural?', options: ['Einstein', 'Newton', 'Darwin', 'Galileu'], correct: 2 },
+            { id: 87, level: 'medio', subject: 'historia', text: 'O governo ditatorial de Getúlio Vargas (1937-1945) foi o:', options: ['República Velha', 'Estado Novo', 'Anos de Chumbo', 'Nova República'], correct: 1 },
+            { id: 88, level: 'medio', subject: 'geografia', text: 'Qual país sul-americano faz fronteira com o Brasil, mas NÃO tem saída pro mar?', options: ['Colômbia', 'Uruguai', 'Bolívia', 'Peru'], correct: 2 },
+            { id: 89, level: 'medio', subject: 'ciencias', text: 'Qual vitamina é ativada no corpo pela exposição ao Sol?', options: ['A', 'C', 'D', 'B12'], correct: 2 },
+            { id: 90, level: 'medio', subject: 'historia', text: 'A Guerra de Canudos (1896) ocorreu em qual estado?', options: ['SP', 'Bahia', 'Pernambuco', 'RJ'], correct: 1 },
+            { id: 91, level: 'medio', subject: 'geografia', text: 'O clima predominante na maior parte do Brasil é:', options: ['Tropical', 'Temperado', 'Desértico', 'Equatorial'], correct: 0 },
+            { id: 92, level: 'medio', subject: 'ciencias', text: 'Os dinossauros foram extintos em qual era geológica?', options: ['Paleozoica', 'Cenozoica', 'Mesozoica', 'Pré-Cambriana'], correct: 2 },
+            { id: 93, level: 'medio', subject: 'historia', text: 'Qual foi a principal atividade econômica do Brasil no século XVIII?', options: ['Café', 'Borracha', 'Mineração (Ouro)', 'Cana'], correct: 2 },
+            { id: 94, level: 'medio', subject: 'geografia', text: 'O cerrado é um bioma que predomina em qual região brasileira?', options: ['Sul', 'Norte', 'Centro-Oeste', 'Nordeste'], correct: 2 },
+            { id: 95, level: 'medio', subject: 'ciencias', text: 'Como se chama o órgão principal da respiração humana?', options: ['Estômago', 'Coração', 'Fígado', 'Pulmões'], correct: 3 },
+            { id: 96, level: 'medio', subject: 'historia', text: 'Qual foi o presidente brasileiro responsável pela construção de Brasília?', options: ['Getúlio Vargas', 'Juscelino Kubitschek', 'Jânio Quadros', 'João Goulart'], correct: 1 },
+            { id: 97, level: 'medio', subject: 'geografia', text: 'Qual destes rios é famoso por não secar na Caatinga?', options: ['Amazonas', 'São Francisco', 'Tietê', 'Paraná'], correct: 1 },
+            { id: 98, level: 'medio', subject: 'ciencias', text: 'O processo em que o alimento é quebrado no estômago chama-se:', options: ['Respiração', 'Circulação', 'Digestão', 'Excreção'], correct: 2 },
+            { id: 99, level: 'medio', subject: 'historia', text: 'A Inconfidência Mineira tinha influência de qual movimento europeu?', options: ['Renascimento', 'Revolução Industrial', 'Iluminismo', 'Nazismo'], correct: 2 },
+            { id: 100, level: 'medio', subject: 'geografia', text: 'O Brasil encontra-se predominantemente em qual hemisfério?', options: ['Norte', 'Oriental', 'Sul', 'Ártico'], correct: 2 },
 
-            // DIFÍCIL
-            { id: 51, level: 'dificil', subject: 'portugues', text: 'SARESP (D16) - "Que excelente ideia a tua de sair à chuva sem guarda-chuva e ficar constipado!" Esta frase é um claro exemplo de:', options: ['Metáfora', 'Ironia', 'Eufemismo', 'Pleonasmo'], correct: 1 },
-            { id: 52, level: 'dificil', subject: 'historia', text: 'O que estipulava o Tratado de Tordesilhas (1494)?', options: ['A paz entre Portugal e Inglaterra.', 'A divisão do Novo Mundo entre Portugal e Espanha.', 'A abolição do tráfico negreiro.', 'A abertura dos portos brasileiros.'], correct: 1 },
-            { id: 53, level: 'dificil', subject: 'geografia', text: 'O Aquífero Guarani, um dos maiores reservatórios subterrâneos do mundo, NÃO abrange terras de qual destes países?', options: ['Brasil', 'Argentina', 'Chile', 'Uruguai'], correct: 2 },
-            { id: 54, level: 'dificil', subject: 'ciencias', text: 'Qual organelo celular é responsável pela produção de energia (respiração celular)?', options: ['Ribossoma', 'Mitocôndria', 'Lisossoma', 'Complexo de Golgi'], correct: 1 },
-            { id: 55, level: 'dificil', subject: 'portugues', text: 'SARESP (D18) - O uso do pronome "Tu" conjugado como "Tu vai" (em vez de "Tu vais") é classificado em linguagem como uma:', options: ['Variação linguística informal/coloquial', 'Regra da norma-padrão', 'Erro proposital literário', 'Linguagem técnica'], correct: 0 },
-            { id: 56, level: 'dificil', subject: 'historia', text: 'A Revolta da Vacina, no Rio de Janeiro (1904), teve como um dos seus estopins as campanhas de qual médico sanitarista?', options: ['Carlos Chagas', 'Oswaldo Cruz', 'Vital Brazil', 'Adolfo Lutz'], correct: 1 },
-            { id: 57, level: 'dificil', subject: 'geografia', text: 'Qual fenômeno natural é caracterizado pelo aquecimento anormal das águas do Oceano Pacífico Equatorial?', options: ['La Niña', 'Tsunami', 'El Niño', 'Ciclone Extratropical'], correct: 2 },
-            { id: 58, level: 'dificil', subject: 'ciencias', text: 'Qual é o elemento químico mais abundante no universo?', options: ['Oxigénio', 'Carbono', 'Hidrogénio', 'Ferro'], correct: 2 },
-            { id: 59, level: 'dificil', subject: 'portugues', text: 'SARESP (D19) - Num artigo de opinião, a "Tese" pode ser definida como:', options: ['O resumo do texto.', 'A ideia central ou posicionamento defendido pelo autor.', 'Os dados estatísticos apresentados.', 'A assinatura do autor.'], correct: 1 },
-            { id: 60, level: 'dificil', subject: 'historia', text: 'Qual movimento popular exigia eleições diretas para a presidência do Brasil em 1984?', options: ['Caras Pintadas', 'Revolução de 32', 'Diretas Já', 'Tenentismo'], correct: 2 },
-            { id: 61, level: 'dificil', subject: 'geografia', text: 'A vegetação de transição entre a Amazônia e a Caatinga, rica em palmeiras como o babaçu, é a:', options: ['Mata Atlântica', 'Mata dos Cocais', 'Pantanal', 'Pampas'], correct: 1 },
-            { id: 62, level: 'dificil', subject: 'ciencias', text: 'Qual é a velocidade aproximada da luz no vácuo?', options: ['300.000 km/s', '340 m/s', '1.000.000 km/h', '150.000 km/s'], correct: 0 },
-            { id: 63, level: 'dificil', subject: 'portugues', text: 'SARESP (D15) - Em "Embora estivesse doente, foi trabalhar", a conjunção "Embora" introduz uma:', options: ['Consequência', 'Concessão (oposição que não impede a ação)', 'Finalidade', 'Proporção'], correct: 1 },
-            { id: 64, level: 'dificil', subject: 'historia', text: 'O que determinava a Lei de Terras de 1850 no Brasil?', options: ['A distribuição de terras a imigrantes.', 'A compra de terras como única forma legal de aquisição, elitizando o acesso.', 'A reforma agrária nacional.', 'A devolução de terras aos indígenas.'], correct: 1 },
-            { id: 65, level: 'dificil', subject: 'geografia', text: 'A desagregação de rochas por agentes como o vento, a água e a variação de temperatura é chamada de:', options: ['Erosão', 'Assoreamento', 'Intemperismo', 'Lixiviação'], correct: 2 },
-            { id: 66, level: 'dificil', subject: 'ciencias', text: 'Em Genética, quando um indivíduo possui dois alelos idênticos para uma característica (ex: AA ou aa), ele é chamado de:', options: ['Heterozigótico', 'Dominante puro', 'Recessivo mutante', 'Homozigótico'], correct: 3 },
-            { id: 67, level: 'dificil', subject: 'portugues', text: 'SARESP (D7) - O que diferencia uma Crônica de uma Notícia?', options: ['A crónica não tem personagens.', 'A notícia é sempre sobre o passado, a crónica sobre o futuro.', 'A notícia relata factos objetivos; a crónica faz uma reflexão literária sobre o quotidiano.', 'A notícia usa linguagem informal.'], correct: 2 },
-            { id: 68, level: 'dificil', subject: 'historia', text: 'A vinda da Família Real Portuguesa ao Brasil em 1808 ocorreu, principalmente, para fugir de qual líder europeu?', options: ['Luís XIV', 'Napoleão Bonaparte', 'Oliver Cromwell', 'Czar Nicolau II'], correct: 1 },
-            { id: 69, level: 'dificil', subject: 'geografia', text: 'A união física de duas ou mais cidades em crescimento, formando uma única malha urbana contínua, chama-se:', options: ['Metropolização', 'Conurbação', 'Favelização', 'Gentrificação'], correct: 1 },
-            { id: 70, level: 'dificil', subject: 'ciencias', text: 'Quem é considerado o "Pai da Genética" pelas suas experiências com ervilhas?', options: ['Charles Darwin', 'Gregor Mendel', 'Louis Pasteur', 'Alexander Fleming'], correct: 1 },
-            { id: 71, level: 'dificil', subject: 'portugues', text: 'SARESP (D12) - Na frase: "Os alunos saíram. Eles estavam felizes." O pronome "Eles" atua como elemento de:', options: ['Ambiguidade', 'Coesão referencial (evita repetição)', 'Erro gramatical', 'Dêixis temporal'], correct: 1 },
-            { id: 72, level: 'dificil', subject: 'historia', text: 'A Guerra do Paraguai (1864-1870) envolveu a Tríplice Aliança formada por:', options: ['Brasil, Argentina e Uruguai', 'Brasil, Chile e Bolívia', 'Paraguai, Argentina e Chile', 'Bolívia, Peru e Brasil'], correct: 0 },
-            { id: 73, level: 'dificil', subject: 'geografia', text: 'Qual país possui a maior população absoluta do mundo atualmente (dados de 2023/2024)?', options: ['China', 'Índia', 'Estados Unidos', 'Rússia'], correct: 1 },
-            { id: 74, level: 'dificil', subject: 'ciencias', text: 'Qual é o nome da ligação química em que ocorre a partilha de eletrões entre átomos?', options: ['Ligação Iónica', 'Ligação Metálica', 'Ligação Covalente', 'Força de Van der Waals'], correct: 2 },
-            { id: 75, level: 'dificil', subject: 'portugues', text: 'SARESP (D21) - O uso de gírias e expressões regionais num texto narrativo tem a principal função de:', options: ['Dificultar a leitura', 'Caracterizar socialmente e regionalmente os personagens', 'Mostrar que o autor não sabe escrever', 'Transformar o texto em poesia'], correct: 1 }
+            // ================= DIFÍCIL (50) =================
+            { id: 101, level: 'dificil', subject: 'portugues', text: 'SARESP (D16) - "Que excelente ideia sair na chuva sem guarda-chuva!" Esta frase é um exemplo de:', options: ['Metáfora', 'Ironia', 'Eufemismo', 'Pleonasmo'], correct: 1 },
+            { id: 102, level: 'dificil', subject: 'portugues', text: 'SARESP (D18) - "Tu vai" (em vez de "Tu vais") é classificado como uma:', options: ['Variação coloquial/informal', 'Regra da norma-padrão', 'Erro literário', 'Linguagem técnica'], correct: 0 },
+            { id: 103, level: 'dificil', subject: 'portugues', text: 'SARESP (D19) - Em um artigo de opinião, a "Tese" é:', options: ['O resumo', 'O posicionamento central do autor', 'Os dados numéricos', 'O título'], correct: 1 },
+            { id: 104, level: 'dificil', subject: 'portugues', text: 'SARESP (D15) - "EMBORA estivesse doente, foi trabalhar." A conjunção introduz uma:', options: ['Consequência', 'Concessão (oposição)', 'Finalidade', 'Proporção'], correct: 1 },
+            { id: 105, level: 'dificil', subject: 'portugues', text: 'SARESP (D7) - O que diferencia uma Crônica de uma Notícia?', options: ['Não tem personagens', 'É sobre o futuro', 'A crônica faz reflexão literária sobre o cotidiano', 'Usa gírias pesadas'], correct: 2 },
+            { id: 106, level: 'dificil', subject: 'portugues', text: 'SARESP (D12) - "Os alunos saíram. ELES estavam felizes." O pronome "Eles" atua como elemento de:', options: ['Ambiguidade', 'Coesão referencial', 'Erro gramatical', 'Dêixis temporal'], correct: 1 },
+            { id: 107, level: 'dificil', subject: 'portugues', text: 'SARESP (D21) - Usar gírias regionais num texto narrativo tem a função de:', options: ['Dificultar a leitura', 'Caracterizar socialmente os personagens', 'Mostrar falta de estudo', 'Fazer poesia'], correct: 1 },
+            { id: 108, level: 'dificil', subject: 'portugues', text: 'SARESP (D16) - O humor sarcástico que diz o oposto do que se pensa chama-se:', options: ['Eufemismo', 'Paradoxo', 'Ironia', 'Metonímia'], correct: 2 },
+            { id: 109, level: 'dificil', subject: 'portugues', text: 'SARESP (D18) - A linguagem usada em um tribunal de justiça deve priorizar o registro:', options: ['Coloquial', 'Formal/Culto', 'Regional', 'Gíria'], correct: 1 },
+            { id: 110, level: 'dificil', subject: 'portugues', text: 'SARESP (D19) - O principal objetivo de um texto Dissertativo-Argumentativo é:', options: ['Narrar um conto', 'Convencer o leitor sobre um ponto de vista', 'Descrever um objeto detalhadamente', 'Fazer rir'], correct: 1 },
+            { id: 111, level: 'dificil', subject: 'portugues', text: 'SARESP (D15) - "Ela estudou LOGO passou no vestibular." A palavra destacada expressa:', options: ['Conclusão', 'Adição', 'Oposição', 'Causa'], correct: 0 },
+            { id: 112, level: 'dificil', subject: 'portugues', text: 'SARESP (D7) - O "Editorial" de um jornal tem como característica ser:', options: ['Um poema', 'A opinião oficial do veículo de comunicação', 'Uma receita culinária', 'Uma tira em quadrinhos'], correct: 1 },
+            { id: 113, level: 'dificil', subject: 'portugues', text: 'SARESP (D12) - A função de sinônimos e pronomes num texto longo é garantir a:', options: ['Coesão (evitar repetições)', 'Ambiguidade', 'Rima', 'Pontuação correta'], correct: 0 },
+            { id: 114, level: 'dificil', subject: 'portugues', text: 'SARESP (D21) - Em "Vige Maria, que susto muié!", temos predominância de linguagem:', options: ['Técnica', 'Científica', 'Regional/Coloquial', 'Padrão erudita'], correct: 2 },
+            { id: 115, level: 'dificil', subject: 'portugues', text: 'SARESP (D16) - Dizer "Ele partiu dessa para melhor" em vez de "Ele morreu" é um:', options: ['Ironia', 'Eufemismo (suavização)', 'Hipérbole (exagero)', 'Pleonasmo'], correct: 1 },
+            { id: 116, level: 'dificil', subject: 'portugues', text: 'SARESP (D18) - As gírias usadas por grupos de skatistas são um exemplo de variação:', options: ['Geográfica', 'Histórica', 'Diastrática (sociocultural)', 'Padrão'], correct: 2 },
+            { id: 117, level: 'dificil', subject: 'portugues', text: 'SARESP (D19) - Um "contra-argumento" serve para:', options: ['Apoiar o autor', 'Antecipar uma ideia oposta e tentar derrubá-la', 'Concluir o texto', 'Contar uma piada'], correct: 1 },
+            { id: 118, level: 'dificil', subject: 'portugues', text: 'SARESP (D15) - "Choveu COMO se o mundo fosse acabar." Indica relação de:', options: ['Comparação', 'Condição', 'Tempo', 'Oposição'], correct: 0 },
+            { id: 119, level: 'dificil', subject: 'portugues', text: 'SARESP (D7) - Gênero textual marcado pelo diálogo contínuo de personagens para ser encenado:', options: ['Bula', 'Notícia', 'Texto Teatral', 'Artigo de Opinião'], correct: 2 },
+            { id: 120, level: 'dificil', subject: 'portugues', text: 'SARESP (D12) - Em "O ouro é valioso; ELE atraiu muitos exploradores", o termo "ELE" é um elemento:', options: ['Catáforico', 'Anafórico (retoma algo dito)', 'Adjetivo', 'Preposição'], correct: 1 },
+            { id: 121, level: 'dificil', subject: 'portugues', text: 'SARESP (D21) - O uso frequente de jargões médicos num texto literário pode criar um efeito de:', options: ['Regionalismo', 'Verossimilhança com a profissão', 'Humor pastelão', 'Ritmo poético'], correct: 1 },
+            { id: 122, level: 'dificil', subject: 'portugues', text: 'SARESP (D16) - "Chorar rios de lágrimas" é um claro exemplo de:', options: ['Ironia', 'Hipérbole (exagero poético)', 'Eufemismo', 'Aliteração'], correct: 1 },
+            { id: 123, level: 'dificil', subject: 'portugues', text: 'SARESP (D18) - Palavras antigas como "Vossa Mercê" representam uma variação linguística:', options: ['Regional', 'Histórica', 'Social', 'Jargão'], correct: 1 },
+            { id: 124, level: 'dificil', subject: 'portugues', text: 'SARESP (D19) - Num debate, o argumento embasado na Constituição do país chama-se argumento de:', options: ['Senso comum', 'Prova concreta/Legal', 'Autoridade', 'Subjetivo'], correct: 1 },
+            { id: 125, level: 'dificil', subject: 'portugues', text: 'SARESP (D15) - "CONFORME foi planejado, a festa foi um sucesso." A conjunção exprime:', options: ['Condição', 'Conformidade', 'Causa', 'Tempo'], correct: 1 },
+            { id: 126, level: 'dificil', subject: 'historia', text: 'O que estipulava o Tratado de Tordesilhas (1494)?', options: ['Paz entre Portugal e Inglaterra', 'Divisão do Novo Mundo entre Portugal e Espanha', 'Abolição do tráfico', 'Abertura dos portos'], correct: 1 },
+            { id: 127, level: 'dificil', subject: 'geografia', text: 'O Aquífero Guarani NÃO abrange terras de qual país?', options: ['Brasil', 'Argentina', 'Chile', 'Uruguai'], correct: 2 },
+            { id: 128, level: 'dificil', subject: 'ciencias', text: 'Qual organela celular faz a respiração celular (energia)?', options: ['Ribossomo', 'Mitocôndria', 'Lisossomo', 'Complexo de Golgi'], correct: 1 },
+            { id: 129, level: 'dificil', subject: 'historia', text: 'A Revolta da Vacina (1904) teve como estopim as ações de qual médico?', options: ['Carlos Chagas', 'Oswaldo Cruz', 'Vital Brazil', 'Adolfo Lutz'], correct: 1 },
+            { id: 130, level: 'dificil', subject: 'geografia', text: 'O aquecimento anormal do Oceano Pacífico Equatorial é o:', options: ['La Niña', 'Tsunami', 'El Niño', 'Ciclone'], correct: 2 },
+            { id: 131, level: 'dificil', subject: 'ciencias', text: 'Qual é o elemento químico mais abundante no universo?', options: ['Oxigênio', 'Carbono', 'Hidrogênio', 'Ferro'], correct: 2 },
+            { id: 132, level: 'dificil', subject: 'historia', text: 'O movimento "Diretas Já" (1984) exigia eleições diretas para:', options: ['Governador', 'Prefeito', 'Presidente do Brasil', 'Senador'], correct: 2 },
+            { id: 133, level: 'dificil', subject: 'geografia', text: 'A vegetação de transição entre Amazônia e Caatinga rica em babaçu é:', options: ['Mata Atlântica', 'Mata dos Cocais', 'Pantanal', 'Pampas'], correct: 1 },
+            { id: 134, level: 'dificil', subject: 'ciencias', text: 'Qual a velocidade aproximada da luz no vácuo?', options: ['300.000 km/s', '340 m/s', '1.000.000 km/h', '150.000 km/s'], correct: 0 },
+            { id: 135, level: 'dificil', subject: 'historia', text: 'O que determinava a Lei de Terras de 1850 no Brasil?', options: ['Doação de terras a imigrantes', 'Compra como única forma legal de obter terras', 'Reforma agrária', 'Devolução aos indígenas'], correct: 1 },
+            { id: 136, level: 'dificil', subject: 'geografia', text: 'A desagregação de rochas por vento/água chama-se:', options: ['Erosão', 'Assoreamento', 'Intemperismo', 'Lixiviação'], correct: 2 },
+            { id: 137, level: 'dificil', subject: 'ciencias', text: 'Indivíduo com dois alelos idênticos para uma característica (ex: AA ou aa) é:', options: ['Heterozigoto', 'Dominante puro', 'Recessivo mutante', 'Homozigoto'], correct: 3 },
+            { id: 138, level: 'dificil', subject: 'historia', text: 'A Família Real Portuguesa veio ao Brasil (1808) para fugir de:', options: ['Luís XIV', 'Napoleão Bonaparte', 'Cromwell', 'Czar Nicolau'], correct: 1 },
+            { id: 139, level: 'dificil', subject: 'geografia', text: 'A união física da malha urbana de duas cidades chama-se:', options: ['Metropolização', 'Conurbação', 'Favelização', 'Gentrificação'], correct: 1 },
+            { id: 140, level: 'dificil', subject: 'ciencias', text: 'Quem é o "Pai da Genética" pelos estudos com ervilhas?', options: ['Darwin', 'Mendel', 'Pasteur', 'Fleming'], correct: 1 },
+            { id: 141, level: 'dificil', subject: 'historia', text: 'A Guerra do Paraguai envolveu a Tríplice Aliança (Brasil, Argentina e...):', options: ['Uruguai', 'Chile', 'Bolívia', 'Peru'], correct: 0 },
+            { id: 142, level: 'dificil', subject: 'geografia', text: 'Qual país tem a maior população absoluta do mundo atualmente?', options: ['China', 'Índia', 'EUA', 'Rússia'], correct: 1 },
+            { id: 143, level: 'dificil', subject: 'ciencias', text: 'Ligação química com compartilhamento de elétrons:', options: ['Iônica', 'Metálica', 'Covalente', 'Van der Waals'], correct: 2 },
+            { id: 144, level: 'dificil', subject: 'historia', text: 'A "Revolta da Chibata" (1910) foi um motim de qual grupo?', options: ['Fazendeiros', 'Escravizados', 'Marinheiros Brasileiros', 'Operários em greve'], correct: 2 },
+            { id: 145, level: 'dificil', subject: 'geografia', text: 'A "Guerra Fria" dividiu o mundo entre áreas de influência de:', options: ['EUA e China', 'EUA e URSS', 'Alemanha e Inglaterra', 'Brasil e Argentina'], correct: 1 },
+            { id: 146, level: 'dificil', subject: 'ciencias', text: 'A 1ª Lei de Newton também é conhecida como Lei da:', options: ['Inércia', 'Dinâmica', 'Ação e Reação', 'Gravidade'], correct: 0 },
+            { id: 147, level: 'dificil', subject: 'historia', text: 'O Tratado de Madri (1750) serviu para:', options: ['Fim da escravidão', 'Definir fronteiras coloniais na América do Sul', 'Fim do Império', 'Aliança com a França'], correct: 1 },
+            { id: 148, level: 'dificil', subject: 'geografia', text: 'Processo econômico global de integração de mercados e comunicação:', options: ['Isolacionismo', 'Globalização', 'Protecionismo', 'Nacionalismo'], correct: 1 },
+            { id: 149, level: 'dificil', subject: 'ciencias', text: 'O RNA se diferencia do DNA por ser fita simples e possuir a base nitrogenada:', options: ['Timina', 'Guanina', 'Citosina', 'Uracila'], correct: 3 },
+            { id: 150, level: 'dificil', subject: 'historia', text: 'O que marcou o fim da "República Velha" no Brasil?', options: ['Revolução de 1930', 'Diretas Já', 'Golpe Militar', 'Independência'], correct: 0 }
         ];
 
         const prizeLadder = [
@@ -218,14 +281,12 @@
             600000, 700000, 800000, 900000, 1000000
         ];
 
-        // Estado Global
         let gameQuestions = [];
         let currentIndex = 0;
         let shuffledOptions = [];
         let isRevealing = false;
         let earnedMoney = 0;
 
-        // Funções utilitárias
         const shuffleArray = (array) => {
             let newArr = [...array];
             for (let i = newArr.length - 1; i > 0; i--) {
@@ -236,25 +297,21 @@
         };
 
         const formatMoney = (val) => {
-            return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
         };
 
         const showScreen = (screenId) => {
             document.getElementById('screen-start').classList.add('hidden');
             document.getElementById('screen-start').classList.remove('flex');
-            
             document.getElementById('screen-playing').classList.add('hidden');
             document.getElementById('screen-playing').classList.remove('flex');
-            
             document.getElementById('screen-end').classList.add('hidden');
             document.getElementById('screen-end').classList.remove('flex');
-
             const screen = document.getElementById(`screen-${screenId}`);
             screen.classList.remove('hidden');
             screen.classList.add('flex');
         };
 
-        // Iniciar Jogo
         const startGame = () => {
             const getQuestionsByLevel = (level, portCount, otherCount) => {
                 const portQs = shuffleArray(questionBank.filter(q => q.level === level && q.subject === 'portugues'));
@@ -262,6 +319,7 @@
                 return shuffleArray([...portQs.slice(0, portCount), ...otherQs.slice(0, otherCount)]);
             };
 
+            // Garante 50% PT e 50% Outras matérias em 20 questões:
             const faceis = getQuestionsByLevel('facil', 4, 3);
             const medias = getQuestionsByLevel('medio', 3, 4);
             const dificeis = getQuestionsByLevel('dificil', 3, 3);
@@ -274,7 +332,6 @@
             showScreen('playing');
         };
 
-        // Renderizar Pergunta
         const renderQuestion = () => {
             isRevealing = false;
             const currentQ = gameQuestions[currentIndex];
@@ -282,7 +339,6 @@
             const stopPrize = currentIndex === 0 ? 0 : prizeLadder[currentIndex - 1];
             const errPrize = stopPrize / 2;
 
-            // Atualiza UI de Valores
             document.getElementById('ui-q-number').innerText = currentIndex + 1;
             document.getElementById('ui-q-level').innerText = `Nível ${currentQ.level === 'facil' ? 'Fácil' : currentQ.level === 'medio' ? 'Médio' : 'Difícil'}`;
             document.getElementById('ui-prize-guaranteed-top').innerText = formatMoney(stopPrize);
@@ -291,23 +347,20 @@
             document.getElementById('ui-prize-wrong').innerText = formatMoney(errPrize);
             document.getElementById('ui-btn-stop-val').innerText = formatMoney(stopPrize);
 
-            // Atualiza Questão
             document.getElementById('ui-question-text').innerText = currentQ.text;
             document.getElementById('ui-subject-icon').innerHTML = icons[currentQ.subject] || icons.default;
 
-            // Opções
             const optionsWithStatus = currentQ.options.map((opt, idx) => ({ text: opt, isCorrect: idx === currentQ.correct }));
             shuffledOptions = shuffleArray(optionsWithStatus);
 
             const optionsContainer = document.getElementById('ui-options-container');
-            optionsContainer.innerHTML = ''; // Limpa antigas
+            optionsContainer.innerHTML = ''; 
             
             const letters = ['A', 'B', 'C', 'D'];
 
             shuffledOptions.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                // Classes base (estado normal)
-                btn.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center hover:-translate-y-1 bg-blue-900/40 border-blue-500/30 hover:bg-blue-800/60 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] text-blue-100";
+                btn.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center hover:-translate-y-1 bg-blue-900/40 border-blue-500/30 hover:bg-blue-800/60 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] text-blue-100 cursor-pointer";
                 btn.innerHTML = `
                     <span class="w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-blue-500/20 text-blue-300 option-letter">
                         ${letters[idx]}
@@ -321,7 +374,6 @@
             document.getElementById('btn-stop').disabled = false;
         };
 
-        // Processar Resposta
         const handleAnswer = (index, btnElement) => {
             if (isRevealing) return;
             isRevealing = true;
@@ -330,35 +382,29 @@
             const isCorrect = shuffledOptions[index].isCorrect;
             const allBtns = document.querySelectorAll('.option-btn');
 
-            // Primeiro: Colocar a escolhida a amarelo (suspense)
             btnElement.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center bg-yellow-500 border-yellow-300 text-blue-950 shadow-[0_0_20px_rgba(250,204,21,0.5)]";
             btnElement.querySelector('.option-letter').className = "w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-black/10 text-blue-900 option-letter";
 
-            // Remove o hover das outras
             allBtns.forEach(b => { 
                 b.classList.remove('hover:-translate-y-1'); 
+                b.classList.remove('cursor-pointer');
                 b.disabled = true; 
             });
 
-            // Aguarda 1.5s de suspense e revela
             setTimeout(() => {
                 allBtns.forEach((b, i) => {
                     if (shuffledOptions[i].isCorrect) {
-                        // Correta fica verde
                         b.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center bg-green-600 border-green-400 shadow-[0_0_30px_rgba(34,197,94,0.6)] text-white z-10 scale-105";
                         b.querySelector('.option-letter').className = "w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-white/20 text-white option-letter";
                     } else if (i === index) {
-                        // Se errou, a escolhida fica vermelha
                         b.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center bg-red-600 border-red-400 text-white opacity-80";
                         b.querySelector('.option-letter').className = "w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-white/20 text-white option-letter";
                     } else {
-                        // Outras ficam cinzentas
                         b.className = "option-btn p-5 md:p-6 rounded-2xl border-2 text-left text-lg md:text-xl font-medium transition-all duration-300 flex items-center bg-gray-900/50 border-gray-700 opacity-40 text-gray-400";
                         b.querySelector('.option-letter').className = "w-10 h-10 rounded-full flex items-center justify-center mr-5 font-bold shrink-0 text-lg bg-gray-700 text-gray-500 option-letter";
                     }
                 });
 
-                // Aguarda mais 1s para o utilizador ver o resultado, e avança/termina
                 setTimeout(() => {
                     if (isCorrect) {
                         if (currentIndex === 19) {
@@ -374,7 +420,7 @@
                     }
                 }, 1500);
 
-            }, 1500); // Tempo do suspense amarelo
+            }, 1500); 
         };
 
         const handleStop = () => {
@@ -391,13 +437,13 @@
             let iconHtml = "";
 
             if (status === 'won') {
-                title = "FICASTE MILIONÁRIO!";
+                title = "VOCÊ FICOU MILIONÁRIO!";
                 iconHtml = icons.trophy;
             } else if (status === 'stopped') {
                 title = "ATITUDE SÁBIA!";
                 iconHtml = icons.hand;
             } else {
-                title = "QUE PENA, ERRASTE!";
+                title = "QUE PENA, VOCÊ ERROU!";
                 iconHtml = icons.xcircle;
             }
 
@@ -407,9 +453,10 @@
             showScreen('end');
         };
 
-        // Inicializar a primeira tela
         showScreen('start');
-
     </script>
 </body>
 </html>
+
+
+```
